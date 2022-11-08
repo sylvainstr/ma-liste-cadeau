@@ -1,7 +1,11 @@
 RewriteEngine On
-RewriteBase /
-#si ce n'est pas un répertoire
-RewriteCond %{REQUEST_FILENAME} !-d
-# Si ce n'est pas un fichier
+
+# dynamically setup base URI
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+RewriteRule ^(.*) - [E=BASE_URI:%1]
+
+# redirect every request to index.php
+# and give the relative URL in "_url" GET param
+# RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ index.php [QSA,L]
+RewriteRule ^(.*)$ index.php?url=/$1 [QSA,L]
