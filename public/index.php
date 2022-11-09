@@ -59,8 +59,6 @@ $router->get('/inscription', function () {
   echo "Inscription";
 });
 
-$router->get('/contact', function () {
-  echo "Contact";
-});
+$router->get('/contact', "Main#contact");
 
 $router->run();

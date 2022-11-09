@@ -16,11 +16,11 @@ class Route
     $this->callable = $callable;
   }
 
-  public function with($param, $regex)
-  {
-    $this->params[$param] = str_replace('(', '(?:', $regex);
-    return $this; // On retourne tjrs l'objet pour enchainer les arguments
-  }
+  // public function with($param, $regex)
+  // {
+  //   $this->params[$param] = str_replace('(', '(?:', $regex);
+  //   return $this; // On retourne tjrs l'objet pour enchainer les arguments
+  // }
 
   /**
    * Permettra de capturer l'url avec les paramètre 
@@ -60,6 +60,7 @@ class Route
     }
   }
 
+  // permet de générer une URL en passant les paramètres
   public function getUrl($params)
   {
     $path = $this->path;

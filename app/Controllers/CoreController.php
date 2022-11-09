@@ -12,6 +12,14 @@ class CoreController {
 
   }
 
+  public function renderError(string $template) {
+
+    require_once __DIR__ . '/../Views/header.tpl.php';
+    require_once __DIR__ . "/../Views/" . $template . ".tpl.php";
+    require_once __DIR__ . '/../Views/footer.tpl.php';
+
+  }
+
   public function renderList(string $template) {
 
     require_once __DIR__ . '/../Views/header.tpl.php';
