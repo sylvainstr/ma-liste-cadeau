@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ErrorController;
 use App\Routes\Router;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -61,4 +62,12 @@ $router->get('/inscription', function () {
 
 $router->get('/contact', "Main#contact");
 
-$router->run();
+try {
+  $router->run();
+}
+catch (Exception $e) {
+  if ($e->getCode() === 404) {
+    $errorController = new ErrorController();
+    $errorController->notFound();
+  }
+}

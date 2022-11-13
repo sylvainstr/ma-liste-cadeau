@@ -4,7 +4,7 @@ namespace App\Models;
 
 class CoreModel
 {
-  protected $id;  
+  protected $id;
   protected $created_at;
   protected $updated_at;
   
@@ -20,7 +20,7 @@ class CoreModel
   /**
    * Get the value of created_at
    */ 
-  public function getCreated_at()
+  public function getCreatedAt()
   {
     return $this->created_at;
   }
@@ -30,7 +30,7 @@ class CoreModel
    *
    * @return  self
    */ 
-  public function setCreated_at(string $created_at)
+  public function setCreatedAt($created_at)
   {
     $this->created_at = $created_at;
 
@@ -40,7 +40,7 @@ class CoreModel
   /**
    * Get the value of updated_at
    */ 
-  public function getUpdated_at()
+  public function getUpdatedAt()
   {
     return $this->updated_at;
   }
@@ -50,7 +50,7 @@ class CoreModel
    *
    * @return  self
    */ 
-  public function setUpdated_at(string $updated_at)
+  public function setUpdatedAt($updated_at)
   {
     $this->updated_at = $updated_at;
 

@@ -10,19 +10,20 @@ class ListController extends CoreController
     {
       $lists = new Lists();
       $lists = $lists->findAll();
-      var_dump($lists);
 
-      $this->renderList('list');
+      $this->render('list/list', [
+        'lists' => $lists
+      ]);
     }
 
     public function add()
     {
-        $this->renderList('add');
+        $this->render('add');
     }
 
     public function edit()
     {
-        $this->renderList('edit');
+        $this->render('edit');
     }
 
     public function delete()

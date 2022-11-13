@@ -6,7 +6,7 @@ class MainController extends CoreController
 {
     public function home()
     {
-        $this->render('home');
+        $this->render('main/home');
     }
 
     public function contact()

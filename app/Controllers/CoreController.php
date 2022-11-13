@@ -3,29 +3,23 @@
 namespace App\Controllers;
 
 class CoreController {
+  /**
+   * Renvoi vers le template $template en lui passant des données
+   *
+   * @param string $template Path du template
+   * @param array $variables Variable utilisable dans le template
+   * @return void
+   */
+  public function render(string $template, $variables = []) {
 
-  public function render(string $template) {
-
-    require_once __DIR__ . '/../Views/header.tpl.php';
-    require_once __DIR__ . "/../Views/main/" . $template . ".tpl.php";
-    require_once __DIR__ . '/../Views/footer.tpl.php';
-
-  }
-
-  public function renderError(string $template) {
-
+    // transform les clés en variables
+    // exemple : ['list' => 12] devient $list = 12;
+    extract($variables);
+    unset($variables);
+    
     require_once __DIR__ . '/../Views/header.tpl.php';
     require_once __DIR__ . "/../Views/" . $template . ".tpl.php";
     require_once __DIR__ . '/../Views/footer.tpl.php';
 
   }
-
-  public function renderList(string $template) {
-
-    require_once __DIR__ . '/../Views/header.tpl.php';
-    require_once __DIR__ . "/../Views/list/" . $template . ".tpl.php";
-    require_once __DIR__ . '/../Views/footer.tpl.php';
-
-  }
-
 }

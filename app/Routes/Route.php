@@ -12,7 +12,7 @@ class Route
 
   public function __construct($path, $callable)
   {
-    $this->path = trim($path, '/');  // On retire les / inutils
+    $this->path = trim($path, '/');  // On retire les / inutiles
     $this->callable = $callable;
   }
 

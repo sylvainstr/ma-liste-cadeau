@@ -4,6 +4,7 @@ namespace App\Routes;
 
 class Router
 {
+  
 
     private $url;
     private $routes = [];
@@ -24,6 +25,15 @@ class Router
         return $this->add($path, $callable, $name, 'POST');
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $path : chemin
+     * @param string $callable : nom de la méthode
+     * @param string $name : nom de la route
+     * @param string $method : get ou post
+     * @return void
+     */
     private function add($path, $callable, $name, $method)
     {
         $route = new Route($path, $callable);
@@ -47,13 +57,13 @@ class Router
                 return $route->call();
             }
         }
-        throw new RouterException('No matching routes');
+        throw new RouterException('No matching routes', 404);
     }
 
     public function url($name, $params = [])
     {
         if (!isset($this->namedRoutes[$name])) {
-            throw new RouterException('No route matches this name');
+            throw new RouterException('No route matches this name', 404);
         }
         return $this->namedRoutes[$name]->getUrl($params);
     }
