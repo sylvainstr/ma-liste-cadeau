@@ -1,1 +1,8 @@
-<h1>FOOTER</h1>
+<!-- Wrapper Closure -->
+</div>
+<footer>
+  <h1>FOOTER</h1>
+</footer>
+</body>
+
+</html>

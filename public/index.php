@@ -5,60 +5,48 @@ use App\Routes\Router;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+session_start();
+
 $router = new Router($_GET['url']);
 
 $router->get('/', "Main#home");
 
 // je consulte mes listes de cadeaux
-$router->get('/listes', "List#list");
-
-// je consulte ma liste
-$router->get('/liste/:id', function ($id) {
-  echo 'Ma liste';
-});
+$router->get('/liste', "List#list");
 
 // je crée ma liste de cadeaux
-$router->get('/liste/ajouter', function () {
-  echo "Je crée ma liste de cadeaux";
-});
+$router->get('/liste/ajouter', "List#add");
+$router->post('/liste/ajouter', "List#add");
 
 // je modifie ma liste de cadeaux
-$router->get('/liste//id/modifier', function () {
-  echo "Je modifie ma liste de cadeaux";
-});
+$router->get('/liste/modifier/:id', "List#edit");
+$router->post('/liste/modifier/:id', "List#edit");
+
+// je consulte ma liste
+$router->get('/liste/:id', "List#read");
 
 // je supprime ma liste de cadeaux
-$router->get('/liste/id/supprimer', function () {
-  echo "Je supprime ma liste de cadeaux";
-});
+$router->get('/liste/supprimer/:id', "List#delete");
 
 // j'ajoute un cadeau à ma liste
-$router->get('/liste/id/cadeau/ajouter', function () {
-  echo "J'ajoute mon cadeau";
-});
+$router->post('/liste/:id/cadeau/ajouter', "Gift#add");
 
 // je modifie un cadeau à ma liste
-$router->get('/liste/id/cadeau/modifier', function () {
-  echo "Je modifie mon cadeau";
-});
+$router->post('/liste/:id/cadeau/modifier/:id', "Gift#edit");
 
 // je supprime un cadeau à ma liste
-$router->get('/liste/id/cadeau/supprimer', function () {
-  echo "Je supprime mon cadeau";
-});
+$router->get('/liste/:id/cadeau/supprimer/:id', "Gift#delete");
 
+// j'accéde au formulaire d'inscription
+$router->get('/inscription', "User#register");
+$router->post('/inscription', "User#register");
 
-// $router->get('/test/:slug-:id', "List#list")
-//   ->with('id', '[0-9]+')
-//   ->with('slug', '([a-z\-0-9]+)');
+// j'accéde au formulaire de connexion
+$router->get('/connexion', "User#login");
+$router->post('/connexion', "User#login");
 
-$router->get('/connexion', function () {
-  echo "Connexion";
-});
-
-$router->get('/inscription', function () {
-  echo "Inscription";
-});
+// je me déconnecte
+$router->get('/deconnexion', "User#logout");
 
 $router->get('/contact', "Main#contact");
 
