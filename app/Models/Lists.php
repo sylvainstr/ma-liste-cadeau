@@ -8,6 +8,13 @@ use PDO;
 class Lists extends CoreModel
 {
 
+  static public $eventsType = [
+    'anniversaire' => 'Anniversaire',
+    'naissance' => 'Naissance',
+    'mariage' => 'Mariage',
+    'noël' => 'Noël'
+  ];
+
   private $event;
   private $title;
   private $subtitle;
@@ -61,7 +68,7 @@ class Lists extends CoreModel
   {
     return $this->subtitle;
   }
-
+  
   /**
    * Set the value of subtitle
    *
@@ -70,10 +77,10 @@ class Lists extends CoreModel
   public function setSubtitle($subtitle)
   {
     $this->subtitle = $subtitle;
-
+    
     return $this;
   }
-
+  
   /**
    * Get the value of message
    */
@@ -81,7 +88,7 @@ class Lists extends CoreModel
   {
     return $this->message;
   }
-
+  
   /**
    * Set the value of message
    *
@@ -90,30 +97,30 @@ class Lists extends CoreModel
   public function setMessage($message)
   {
     $this->message = $message;
-
+    
     return $this;
   }
-
+  
   public function findAll(): array
   {
     $sql = '
-          SELECT *
-          FROM lists
-      ';
-
+    SELECT *
+    FROM lists
+    ';
+    
     $pdo = Database::getPDO();
     $pdoStatement = $pdo->query($sql);
     $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Lists::class);
-
+    
     return $result;
   }
-
+  
   public function findById($id): array
   {
     $sql = "
-          SELECT *
-          FROM lists where user_id = '$id'
-      ";
+    SELECT *
+    FROM lists where user_id = '$id'
+    ";
 
     $pdo = Database::getPDO();
     $pdoStatement = $pdo->query($sql);
@@ -178,4 +185,5 @@ class Lists extends CoreModel
     $pdo = Database::getPDO();
     $pdo->query($sql);
   }
+
 }

@@ -8,6 +8,11 @@ use App\Utils\Config;
 
 class UserController extends CoreController
 {
+  /**
+   * Inscrire un utilisateur
+   *
+   * @return void
+   */
   public function register()
   {
     if (isset($_SESSION["user"])) {
@@ -64,6 +69,11 @@ class UserController extends CoreController
     $this->render('user/register');
   }
 
+  /**
+   * Connecter un utilisateur
+   *
+   * @return void
+   */
   public function login()
   {
     if (isset($_SESSION["user"])) {
@@ -114,6 +124,11 @@ class UserController extends CoreController
     $this->render('user/login');
   }
 
+  /**
+   * Déconnecter un utilisateur
+   *
+   * @return void
+   */
   public function logout()
   {
     session_start();

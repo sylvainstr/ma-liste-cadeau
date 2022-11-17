@@ -13,8 +13,9 @@
 
       <p>NEW LIST</p>
 
-      <h3><?= $list->getEvent() ?></h3>
+      <h3><?= ucfirst($list->getEvent()) ?></h3>
       <h3><?= $list->getTitle() ?></h3>
+      <h3><?= $list->getSubtitle() ?></h3>
       <h3><?= $list->getMessage() ?></h3>
 
       <a href="<?= $absoluteUrl ?>liste/<?= $id ?>">Voir la liste</a>

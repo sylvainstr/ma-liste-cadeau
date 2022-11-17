@@ -4,10 +4,18 @@
 
 <form action="<?= $absoluteUrl ?>liste/ajouter" method="post">
   <div class="add-list-group">
-    <div class="add-list-item-event">
-      <label for="event">Nom de l'événement</label>
-      <input type="text" name="event" id="event" required="required" placeholder="Exemple: Naissance">
-    </div>
+
+    <label for="event">Nom de l'événement:</label>
+    <select name="event" id="event">
+      <option value="">Choisir un événement</option>
+
+      <?php foreach (App\Models\Lists::$eventsType as $slug => $label) : ?>
+
+        <option value="<?php echo $slug ?>"><?php echo $label ?></option>
+
+      <?php endforeach; ?>
+    </select>
+
     <div class="add-list-item-title">
       <label for="title">Titre</label>
       <input type="text" name="title" id="title" required="required" placeholder="Exemple : Liste de naissance">

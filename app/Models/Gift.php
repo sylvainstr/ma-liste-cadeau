@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Utils\Database;
+use PDO;
+
 class Gift extends CoreModel
 {
 
@@ -131,5 +134,90 @@ class Gift extends CoreModel
     $this->preference = $preference;
 
     return $this;
+  }
+
+  public function findAll(): array
+  {
+    $sql = '
+          SELECT *
+          FROM lists
+      ';
+
+    $pdo = Database::getPDO();
+    $pdoStatement = $pdo->query($sql);
+    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Lists::class);
+
+    return $result;
+  }
+
+  public function findById($id): array
+  {
+    $sql = "
+          SELECT *
+          FROM lists where user_id = '$id'
+      ";
+
+    $pdo = Database::getPDO();
+    $pdoStatement = $pdo->query($sql);
+    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Lists::class);
+
+    return $result;
+  }
+
+  public function findOne($id)
+  {
+    $sql = "
+          SELECT *
+          FROM lists where id = '$id'
+      ";
+
+    $pdo = Database::getPDO();
+    $pdoStatement = $pdo->query($sql);
+    $result = $pdoStatement->fetchObject(Lists::class);
+
+    $verif = $pdoStatement->rowCount();
+    $badId = false;
+    if ($verif <= 0) {
+      $badId = true;
+    }
+
+    return $result;
+  }
+
+  public function addList($event, $title, $subtitle, $message)
+  {
+    $sql = "
+          INSERT INTO lists (event, title, subtitle, message, user_id)
+          VALUES ('$event', '$title', '$subtitle', '$message', " . $_SESSION["user"]["id"] . ")
+      ";
+
+    $pdo = Database::getPDO();
+    $pdo->exec($sql);
+  }
+
+  public function editList($id, $event, $title, $subtitle, $message)
+  {
+    $sql = "
+          UPDATE lists set
+          event = '$event',
+          title = '$title',
+          subtitle = '$subtitle',
+          message = '$message',
+          updated_at = NOW()
+          where id = '$id'
+      ";
+
+    $pdo = Database::getPDO();
+    $pdo->query($sql);
+  }
+
+  public function deleteList($id)
+  {
+    $sql = "
+          DELETE from lists where id = '$id'
+      ";
+
+    $pdo = Database::getPDO();
+    $pdo->query($sql);
   }
 }

@@ -39,6 +39,15 @@ h1 {
   padding-left: 10rem;
 }
 
+.alert {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 42px;
+  background-color: lightgreen;
+  padding-left: 2rem;
+}
+
 /* Footer */
 
 footer {
