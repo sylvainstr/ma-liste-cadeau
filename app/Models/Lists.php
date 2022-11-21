@@ -100,7 +100,32 @@ class Lists extends CoreModel
     
     return $this;
   }
+
+  /**
+   * Affiche le(s) cadeau(x) d'une liste
+   *
+   * @return array
+   */
+  public function getGifts(): array
+  {
+    $sql = "
+    SELECT *
+    FROM gift
+    WHERE lists_id = " . $this->getId()
+    ;
+    
+    $pdo = Database::getPDO();
+    $pdoStatement = $pdo->query($sql);
+    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Gift::class);
+    
+    return $result;
+  }
   
+  /**
+   * Affiche toutes les listes
+   *
+   * @return array
+   */
   public function findAll(): array
   {
     $sql = '
@@ -115,11 +140,17 @@ class Lists extends CoreModel
     return $result;
   }
   
-  public function findById($id): array
+  /**
+   * affiche les lites d'un utilisateur
+   *
+   * @param [int] $idUser : identifiant de l'utilisateur
+   * @return array
+   */
+  public function findByUserId($idUser): array
   {
     $sql = "
     SELECT *
-    FROM lists where user_id = '$id'
+    FROM lists where user_id = '$idUser'
     ";
 
     $pdo = Database::getPDO();
@@ -129,11 +160,17 @@ class Lists extends CoreModel
     return $result;
   }
 
-  public function findOne($id)
+  /**
+   * Affiche une liste
+   *
+   * @param [int] $idList : identifiant d'une liste
+   * @return Lists
+   */
+  public function findOne($idList): Lists
   {
     $sql = "
           SELECT *
-          FROM lists where id = '$id'
+          FROM lists where id = '$idList'
       ";
 
     $pdo = Database::getPDO();
@@ -149,6 +186,15 @@ class Lists extends CoreModel
     return $result;
   }
 
+  /**
+   * Ajout d'une liste
+   *
+   * @param [string] $event : événement de la liste
+   * @param [string] $title : titre de la liste
+   * @param [string] $subtitle : soustitre de la liste
+   * @param [string] $message : message de la liste
+   * @return void
+   */
   public function addList($event, $title, $subtitle, $message)
   {
     $sql = "
@@ -160,7 +206,17 @@ class Lists extends CoreModel
     $pdo->exec($sql);
   }
 
-  public function editList($id, $event, $title, $subtitle, $message)
+  /**
+   * Modification d'une liste
+   *
+   * @param [int] $idList : identifiant de la liste
+   * @param [string] $event : événement de la liste
+   * @param [string] $title : titre de la liste
+   * @param [string] $subtitle : soustitre de la liste
+   * @param [string] $message : message de la liste
+   * @return void
+   */
+  public function editList($idList, $event, $title, $subtitle, $message)
   {
     $sql = "
           UPDATE lists set
@@ -169,17 +225,23 @@ class Lists extends CoreModel
           subtitle = '$subtitle',
           message = '$message',
           updated_at = NOW()
-          where id = '$id'
+          where id = '$idList'
       ";
 
     $pdo = Database::getPDO();
     $pdo->query($sql);
   }
 
-  public function deleteList($id)
+  /**
+   * Suppression d'une liste
+   *
+   * @param [int] $idList : identifiant de la liste
+   * @return void
+   */
+  public function deleteList($idList)
   {
     $sql = "
-          DELETE from lists where id = '$id'
+          DELETE from lists where id = '$idList'
       ";
 
     $pdo = Database::getPDO();

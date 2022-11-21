@@ -9,7 +9,7 @@
     <select name="event" id="event">
       <?php foreach (App\Models\Lists::$eventsType as $slug => $label) : ?>
 
-        <option value="<?php echo $slug ?>" <?php if($slug == $list_edit->getEvent()): ?>selected<?php endif; ?>><?php echo $label ?></option>
+        <option value="<?php echo $slug ?>" <?php if ($slug == $list_edit->getEvent()) : ?>selected<?php endif; ?>><?php echo $label ?></option>
 
       <?php endforeach; ?>
     </select>

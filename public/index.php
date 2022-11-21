@@ -12,7 +12,7 @@ $router = new Router($_GET['url']);
 $router->get('/', "Main#home");
 
 // je consulte mes listes de cadeaux
-$router->get('/liste', "List#list");
+$router->get('/liste', "List#browse");
 
 // je crée ma liste de cadeaux
 $router->get('/liste/ajouter', "List#add");
@@ -29,13 +29,15 @@ $router->get('/liste/:id', "List#read");
 $router->get('/liste/supprimer/:id', "List#delete");
 
 // j'ajoute un cadeau à ma liste
+$router->get('/liste/:id/cadeau/ajouter', "Gift#add");
 $router->post('/liste/:id/cadeau/ajouter', "Gift#add");
 
 // je modifie un cadeau à ma liste
-$router->post('/liste/:id/cadeau/modifier/:id', "Gift#edit");
+$router->get('/liste/:id/cadeau/modifier/:giftid', "Gift#edit");
+$router->post('/liste/:id/cadeau/modifier/:giftid', "Gift#edit");
 
 // je supprime un cadeau à ma liste
-$router->get('/liste/:id/cadeau/supprimer/:id', "Gift#delete");
+$router->get('/liste/:id/cadeau/supprimer/:giftid', "Gift#delete");
 
 // j'accéde au formulaire d'inscription
 $router->get('/inscription', "User#register");

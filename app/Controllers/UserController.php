@@ -99,7 +99,10 @@ class UserController extends CoreController
         if (!$user) {
           die("L'utilisateur et/ou le mot de passe est incorrect");
         }
-
+        
+        /** @var User */
+        $user = $user;
+        
         // Ici on a un user existant, on peut vérifier le mot de passe
         if (!password_verify($_POST["password"], $user->getPassword())) {
           die("L'utilisateur et/ou le mot de passe est incorrect");

@@ -31,6 +31,6 @@
   </div>
 
   <div class="add-list-button">
-    <button type="submit" name="submit">Envoyer</button>
+    <button type="submit" name="submit">Ajouter</button>
   </div>
 </form>

@@ -73,6 +73,14 @@ class User extends CoreModel
     return $this;
   }
 
+  /**
+   * Ajout d'un utilisateur
+   *
+   * @param [string] $name : nom de l'utilisateur
+   * @param [string] $email : email de l'utilisateur
+   * @param [string] $password : mot de passe de l'utilisateur
+   * @return void
+   */
   public function addUser($name, $email, $password)
   {
     $sql = "
@@ -84,6 +92,12 @@ class User extends CoreModel
     $pdo->exec($sql);
   }
 
+  /**
+   * Affiche l'utilisateur correspondant à l'email
+   *
+   * @param [string] $email
+   * @return void
+   */
   public function searchUser($email)
   {
     $sql = "

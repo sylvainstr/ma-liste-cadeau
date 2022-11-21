@@ -8,37 +8,37 @@ use PDO;
 class Gift extends CoreModel
 {
 
-  private $urlProduct;
+  private $url_product;
   protected $name;
   private $price;
   private $description;
-  private $urlImageProduct;
+  private $url_image_product;
   private $preference;
 
 
   /**
    * Get the value of urlProduct
-   */ 
+   */
   public function getUrlProduct()
   {
-    return $this->urlProduct;
+    return $this->url_product;
   }
 
   /**
    * Set the value of urlProduct
    *
    * @return  self
-   */ 
+   */
   public function setUrlProduct($urlProduct)
   {
-    $this->urlProduct = $urlProduct;
+    $this->url_product = $urlProduct;
 
     return $this;
   }
 
   /**
    * Get the value of name
-   */ 
+   */
   public function getName()
   {
     return $this->name;
@@ -48,7 +48,7 @@ class Gift extends CoreModel
    * Set the value of name
    *
    * @return  self
-   */ 
+   */
   public function setName(string $name)
   {
     $this->name = $name;
@@ -58,7 +58,7 @@ class Gift extends CoreModel
 
   /**
    * Get the value of price
-   */ 
+   */
   public function getPrice()
   {
     return $this->price;
@@ -68,7 +68,7 @@ class Gift extends CoreModel
    * Set the value of price
    *
    * @return  self
-   */ 
+   */
   public function setPrice(int $price)
   {
     $this->price = $price;
@@ -78,7 +78,7 @@ class Gift extends CoreModel
 
   /**
    * Get the value of description
-   */ 
+   */
   public function getDescription()
   {
     return $this->description;
@@ -88,7 +88,7 @@ class Gift extends CoreModel
    * Set the value of description
    *
    * @return  self
-   */ 
+   */
   public function setDescription($description)
   {
     $this->description = $description;
@@ -98,27 +98,27 @@ class Gift extends CoreModel
 
   /**
    * Get the value of urlImageProduct
-   */ 
+   */
   public function getUrlImageProduct()
   {
-    return $this->urlImageProduct;
+    return $this->url_image_product;
   }
 
   /**
    * Set the value of urlImageProduct
    *
    * @return  self
-   */ 
+   */
   public function setUrlImageProduct($urlImageProduct)
   {
-    $this->urlImageProduct = $urlImageProduct;
+    $this->url_image_product = $urlImageProduct;
 
     return $this;
   }
 
   /**
    * Get the value of preference
-   */ 
+   */
   public function getPreference()
   {
     return $this->preference;
@@ -128,7 +128,7 @@ class Gift extends CoreModel
    * Set the value of preference
    *
    * @return  self
-   */ 
+   */
   public function setPreference(int $preference)
   {
     $this->preference = $preference;
@@ -136,11 +136,16 @@ class Gift extends CoreModel
     return $this;
   }
 
+  /**
+   * Récupére tous les cadeaux
+   *
+   * @return array
+   */
   public function findAll(): array
   {
     $sql = '
           SELECT *
-          FROM lists
+          FROM gift
       ';
 
     $pdo = Database::getPDO();
@@ -150,30 +155,42 @@ class Gift extends CoreModel
     return $result;
   }
 
-  public function findById($id): array
+  /**
+   * Affiche les cadeaux d'une liste
+   *
+   * @param [int] $id : identifiant d'une liste
+   * @return array
+   */
+  public function findByListId($idList): array
   {
     $sql = "
           SELECT *
-          FROM lists where user_id = '$id'
+          FROM gift where lists_id = '$idList'
       ";
 
     $pdo = Database::getPDO();
     $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Lists::class);
+    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Gift::class);
 
     return $result;
   }
 
-  public function findOne($id)
+  /**
+   * Affiche un cadeau
+   *
+   * @param [int] $idGift : identifiant d'un cadeau
+   * @return void
+   */
+  public function findOne($idGift)
   {
     $sql = "
           SELECT *
-          FROM lists where id = '$id'
+          FROM gift where id = '$idGift'
       ";
 
     $pdo = Database::getPDO();
     $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchObject(Lists::class);
+    $result = $pdoStatement->fetchObject(Gift::class);
 
     $verif = $pdoStatement->rowCount();
     $badId = false;
@@ -184,37 +201,82 @@ class Gift extends CoreModel
     return $result;
   }
 
-  public function addList($event, $title, $subtitle, $message)
+  /**
+   * Ajoute un cadeau
+   *
+   * @param [int] $idList : identifiant d'une liste
+   * @param [string] $urlProduct : lien du cadeau
+   * @param [string] $name : nom du cadeau
+   * @param [int] $price : prix du cadeau
+   * @param [string] $description : description du cadeau
+   * @param [string] $urlImgProduct : lien de l'image du cadeau
+   * @param [int] $preference : préférence du cadeau
+   * @return void
+   */
+  public function addGift($idList, $urlProduct, $name, $price, $description, $urlImgProduct, $preference)
   {
-    $sql = "
-          INSERT INTO lists (event, title, subtitle, message, user_id)
-          VALUES ('$event', '$title', '$subtitle', '$message', " . $_SESSION["user"]["id"] . ")
-      ";
+    $fields = [
+      'lists_id' => $idList,
+      'url_product' => $urlProduct,
+      'name' => $name,
+      'price' => $price,
+      'url_image_product' => $urlImgProduct,
+      'description' => $description
+    ];
 
+    if ($preference !== null) {
+      $fields['preference'] = $preference;
+    }
+
+    $sql = "
+          INSERT INTO gift (" . implode(", ", array_keys($fields)) . ")
+          VALUES ('" . implode("', '", array_values($fields)) . "')
+      ";
+      
     $pdo = Database::getPDO();
-    $pdo->exec($sql);
+    $pdo->exec($sql) or die(print_r($pdo->errorInfo(), true));
   }
 
-  public function editList($id, $event, $title, $subtitle, $message)
+  /**
+   * Modifie un cadeau
+   *
+   * @param [type] $idList : identifiant d'une liste
+   * @param [type] $urlProduct : lien du cadeau
+   * @param [type] $name : nom du cadeau
+   * @param [type] $price : prix du cadeau
+   * @param [type] $description : description du cadeau
+   * @param [type] $urlImgProduct : lien de l'image du cadeau
+   * @param [type] $preference : préférence du cadeau
+   * @return void
+   */
+  public function editGift($idList, $urlProduct, $name, $price, $description, $urlImgProduct, $preference)
   {
     $sql = "
-          UPDATE lists set
-          event = '$event',
-          title = '$title',
-          subtitle = '$subtitle',
-          message = '$message',
+          UPDATE gift set
+          url_product = '$urlProduct',
+          name = '$name',
+          price = '$price',
+          description = '$description',
+          url_image_product = '$urlImgProduct',
+          preference = '$preference',
           updated_at = NOW()
-          where id = '$id'
+          where id = '$idList'
       ";
 
     $pdo = Database::getPDO();
     $pdo->query($sql);
   }
 
-  public function deleteList($id)
+  /**
+   * Supprime un cadeau
+   *
+   * @param [type] $idGift : identifiant d'un cadeau
+   * @return void
+   */
+  public function deleteGift($idGift)
   {
     $sql = "
-          DELETE from lists where id = '$id'
+          DELETE from gift where id = '$idGift'
       ";
 
     $pdo = Database::getPDO();

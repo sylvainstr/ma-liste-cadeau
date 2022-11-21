@@ -13,12 +13,12 @@ class ListController extends CoreController
    *
    * @return void
    */
-  public function list()
+  public function browse()
   {
     $id = $_SESSION['user']['id'];
 
     $lists = new Lists();
-    $lists = $lists->findById($id);
+    $lists = $lists->findByUserId($id);
 
     $this->render('list/list', [
       'lists' => $lists
@@ -28,13 +28,13 @@ class ListController extends CoreController
   /**
    * consultation de la liste par l'id
    *
-   * @param int $id : id de la liste
+   * @param int $idList : id de la liste
    * @return void
    */
-  public function read($id)
+  public function read($idList)
   {
     $lists = new Lists();
-    $listById = $lists->findOne($id);
+    $listById = $lists->findOne($idList);
 
     // l'id n'existe pas
     if (empty($listById)) {
@@ -42,8 +42,11 @@ class ListController extends CoreController
       return $errorController->notFound();
     }
 
+    $gifts = $listById->getGifts();
+
     $this->render('list/read', [
-      'list_read' => $listById
+      'list_read' => $listById,
+      'gifts' => $gifts
     ]);
   }
 
@@ -77,10 +80,10 @@ class ListController extends CoreController
   /**
    * Modifier une liste
    *
-   * @param int $id : id de la liste
+   * @param int $idList : id de la liste
    * @return void
    */
-  public function edit($id)
+  public function edit($idList)
   {
     if (isset($_POST['event']) && isset($_POST['title']) && isset($_POST['message'])) {
       $event = $_POST['event'];
@@ -89,7 +92,7 @@ class ListController extends CoreController
       $message = $_POST['message'];
 
       $editList = new Lists();
-      $editList = $editList->editList($id, $event, $title, $subtitle, $message);
+      $editList = $editList->editList($idList, $event, $title, $subtitle, $message);
 
       FlashMessage::create_flash_message('list_add_success', 'Votre liste a été modifiée', 'FLASH_SUCCESS');
 
@@ -100,7 +103,7 @@ class ListController extends CoreController
     }
 
     $list = new Lists();
-    $listById = $list->findOne($id);
+    $listById = $list->findOne($idList);
 
     $this->render('list/edit', [
       'list_edit' => $listById
@@ -110,13 +113,13 @@ class ListController extends CoreController
   /**
    * Supprimer une liste
    *
-   * @param int $id : id de la liste
+   * @param int $idList : id de la liste
    * @return void
    */
-  public function delete($id)
+  public function delete($idList)
   {
     $deleteList = new Lists();
-    $deleteList = $deleteList->deleteList($id);
+    $deleteList = $deleteList->deleteList($idList);
 
     FlashMessage::create_flash_message('list_add_success', 'Votre liste a été supprimée', 'FLASH_SUCCESS');
 

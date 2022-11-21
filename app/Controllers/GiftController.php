@@ -3,66 +3,34 @@
 namespace App\Controllers;
 
 use App\Models\Gift;
+use App\Models\Lists;
 use App\Utils\Config;
+use App\Utils\FlashMessage;
 
 class GiftController extends CoreController
 {
-
-    /**
-   * Renvoi les cadeau d'une liste
-   *
-   * @return void
-   */
-  public function browse()
-  {
-    $id = $_SESSION['user']['id'];
-
-    $gift = new Gift();
-    $gift = $gift->findById($id);
-
-    $this->render('gift/gift', [
-      'gift' => $gift
-    ]);
-  }
-
-  /**
-   * consultation d'un cadeau par l'id
-   *
-   * @param int $id : id du cadeau
-   * @return void
-   */
-  public function read($id)
-  {
-    $gift = new Gift();
-    $giftById = $gift->findOne($id);
-
-    // l'id n'existe pas
-    if (empty($giftById)) {
-      $errorController = new ErrorController();
-      return $errorController->notFound();
-    }
-
-    $this->render('gift/read', [
-      'gift_read' => $giftById
-    ]);
-  }
-
   /**
    * Ajouter un cadeau
    *
+   * @param [in] $idList : id de la liste
    * @return void
    */
-  public function add()
+  public function add($idList)
   {
-    if (isset($_POST['event']) && isset($_POST['title']) && isset($_POST['message'])) {
-      $event = $_POST['event'];
-      $title = $_POST['title'];
-      $subtitle = $_POST['subtitle'];
-      $message = $_POST['message'];
+    if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['description']) && isset($_POST['url_image_product']) && isset($_POST['preference'])) {
+      $urlProduct = $_POST['url_product'];
+      $name = $_POST['name'];
+      $price = $_POST['price'];
+      $urlImgProduct = $_POST['url_image_product'];
+
+      // champs avec valeur par défault
+      $description = (!empty($_POST['description'])) ? $_POST['description'] : null;
+      $preference = (!empty($_POST['preference'])) ? $_POST['preference'] : null;
 
       $newGift = new Gift();
-      $newGift = $newGift->addGift($event, $title, $subtitle, $message);
+      $newGift = $newGift->addGift($idList, $urlProduct, $name, $price, $description, $urlImgProduct, $preference);
 
+      FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été ajoutée', 'FLASH_SUCCESS');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
@@ -70,25 +38,35 @@ class GiftController extends CoreController
       exit;
     }
 
-    $this->render('gift/add');
+    $lists = new Lists();
+    $listById = $lists->findOne($idList);
+
+    $this->render('gift/add', [
+      'list_id' => $idList
+    ]);
   }
 
   /**
    * Modifier un cadeau
    *
-   * @param int $id : id d'un cadeau
+   * @param [int] $idList : id de la liste
+   * @param [int] $idGift : id du cadeau
    * @return void
    */
-  public function edit($id)
+  public function edit($idList, $idGift)
   {
-    if (isset($_POST['event']) && isset($_POST['title']) && isset($_POST['message'])) {
-      $event = $_POST['event'];
-      $title = $_POST['title'];
-      $subtitle = $_POST['subtitle'];
-      $message = $_POST['message'];
+    if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['description']) && isset($_POST['url_image_product']) && isset($_POST['preference'])) {
+      $urlProduct = $_POST['url_product'];
+      $name = $_POST['name'];
+      $price = $_POST['price'];
+      $description = $_POST['description'];
+      $urlImgProduct = $_POST['url_image_product'];
+      $preference = $_POST['preference'];
 
       $editGift = new Gift();
-      $editGift = $editGift->editGift($id, $event, $title, $subtitle, $message);
+      $editGift = $editGift->editGift($idGift, $urlProduct, $name, $price, $description, $urlImgProduct, $preference);
+
+      FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été modifié', 'FLASH_SUCCESS');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
@@ -97,23 +75,27 @@ class GiftController extends CoreController
     }
 
     $gift = new Gift();
-    $giftById = $gift->findOne($id);
+    $giftById = $gift->findOne($idGift);
 
     $this->render('gift/edit', [
-      'gift_edit' => $giftById
+      'gift_edit' => $giftById,
+      'lists_id' => $idList
     ]);
   }
 
   /**
    * Supprimer un cadeau
    *
-   * @param int $id : id du cadeau
+   * @param [int] $idList : id de la liste
+   * @param [int] $giftId : id du cadeau
    * @return void
    */
-  public function delete($id)
+  public function delete($idList, $giftId)
   {
     $deleteGift = new Gift();
-    $deleteGift = $deleteGift->deleteGift($id);
+    $deleteGift = $deleteGift->deleteGift($giftId);
+
+    FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été supprimé', 'FLASH_SUCCESS');
 
     $config = Config::getInstance();
     $absoluteUrl =  $config['ABSOLUTE_URL'];
