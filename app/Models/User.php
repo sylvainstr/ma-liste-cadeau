@@ -11,6 +11,7 @@ class User extends CoreModel
   private $email;
   private $password;
   private $name;
+  private $role;
 
 
   /**
@@ -73,19 +74,40 @@ class User extends CoreModel
     return $this;
   }
 
+    /**
+   * Get the value of role
+   */ 
+  public function getRole()
+  {
+    return $this->role;
+  }
+
+  /**
+   * Set the value of role
+   *
+   * @return  self
+   */ 
+  public function setRole($role)
+  {
+    $this->role = $role;
+
+    return $this;
+  }
+
   /**
    * Ajout d'un utilisateur
    *
    * @param [string] $name : nom de l'utilisateur
    * @param [string] $email : email de l'utilisateur
    * @param [string] $password : mot de passe de l'utilisateur
+   * @param [string] $role : role de l'utilisateur
    * @return void
    */
   public function addUser($name, $email, $password)
   {
     $sql = "
-          INSERT INTO user (name, email, password)
-          VALUES ('$name', '$email', '$password')
+          INSERT INTO user (name, email, password, role)
+          VALUES ('$name', '$email', '$password', '[\"ROLE_USER\"]')
       ";
 
     $pdo = Database::getPDO();
@@ -111,4 +133,5 @@ class User extends CoreModel
     
     return $result;
   }
+
 }

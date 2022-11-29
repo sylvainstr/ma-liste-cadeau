@@ -38,11 +38,12 @@ class UserController extends CoreController
         // On va hasher le mot de passe
         $password = password_hash($_POST["password"], PASSWORD_ARGON2ID);
 
+        
         // Ajouter ici tous les contrôles souhaités
-
+        
         $user = new User();
-        $user = $user->addUser($name, $email, $password);
 
+        $user = $user->addUser($name, $email, $password);
 
         // On récupére l'id du nouvel utilisateur
         $pdo = Database::getPDO();
@@ -53,7 +54,8 @@ class UserController extends CoreController
         $_SESSION["user"] = [
           "id" => $id,
           "name" => $name,
-          "email" => $email
+          "email" => $email,
+          "role" => ["ROLE_USER"]
         ];
 
         // On redirige vers la page d'acceuil
