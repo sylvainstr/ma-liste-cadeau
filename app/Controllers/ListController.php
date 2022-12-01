@@ -26,7 +26,7 @@ class ListController extends CoreController
   }
 
   /**
-   * consultation de la liste par l'id
+   * Consultation de la liste par l'id
    *
    * @param int $idList : id de la liste
    * @return void

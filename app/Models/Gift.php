@@ -9,9 +9,9 @@ class Gift extends CoreModel
 {
 
   private $url_product;
-  protected $name;
+  private $name;
   private $price;
-  private $description;
+  private $shop;
   private $url_image_product;
   private $preference;
 
@@ -77,21 +77,21 @@ class Gift extends CoreModel
   }
 
   /**
-   * Get the value of description
+   * Get the value of shop
    */
-  public function getDescription()
+  public function getShop()
   {
-    return $this->description;
+    return $this->shop;
   }
 
   /**
-   * Set the value of description
+   * Set the value of shop
    *
    * @return  self
    */
-  public function setDescription($description)
+  public function setShop($shop)
   {
-    $this->description = $description;
+    $this->shop = $shop;
 
     return $this;
   }
@@ -208,12 +208,12 @@ class Gift extends CoreModel
    * @param [string] $urlProduct : lien du cadeau
    * @param [string] $name : nom du cadeau
    * @param [int] $price : prix du cadeau
-   * @param [string] $description : description du cadeau
+   * @param [string] $shop : shop du cadeau
    * @param [string] $urlImgProduct : lien de l'image du cadeau
    * @param [int] $preference : préférence du cadeau
    * @return void
    */
-  public function addGift($idList, $urlProduct, $name, $price, $description, $urlImgProduct, $preference)
+  public function addGift($idList, $urlProduct, $name, $price, $shop, $urlImgProduct, $preference)
   {
     $fields = [
       'lists_id' => $idList,
@@ -221,7 +221,7 @@ class Gift extends CoreModel
       'name' => $name,
       'price' => $price,
       'url_image_product' => $urlImgProduct,
-      'description' => $description
+      'shop' => $shop
     ];
 
     if ($preference !== null) {
@@ -244,19 +244,19 @@ class Gift extends CoreModel
    * @param [type] $urlProduct : lien du cadeau
    * @param [type] $name : nom du cadeau
    * @param [type] $price : prix du cadeau
-   * @param [type] $description : description du cadeau
+   * @param [type] $shop : shop du cadeau
    * @param [type] $urlImgProduct : lien de l'image du cadeau
    * @param [type] $preference : préférence du cadeau
    * @return void
    */
-  public function editGift($idList, $urlProduct, $name, $price, $description, $urlImgProduct, $preference)
+  public function editGift($idList, $urlProduct, $name, $price, $shop, $urlImgProduct, $preference)
   {
     $sql = "
           UPDATE gift set
           url_product = '$urlProduct',
           name = '$name',
           price = '$price',
-          description = '$description',
+          shop = '$shop',
           url_image_product = '$urlImgProduct',
           preference = '$preference',
           updated_at = NOW()

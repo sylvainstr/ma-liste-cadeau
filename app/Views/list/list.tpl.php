@@ -1,14 +1,12 @@
-<div class="wrapper">
+  <a href="<?= $absoluteUrl ?>liste/ajouter">Ajouter une liste</a>
 
-<a href="<?= $absoluteUrl ?>liste/ajouter">Ajouter une liste</a>
-
-<div class="lists">
-    <h2>Mes listes de cadeaux</h2>
+  <div class="lists">
+    <h2>Mes listes</h2>
 
     <?php foreach ($lists as $list) : ?>
-      
-      <?php 
-        $id = $list->getId();
+
+      <?php
+      $id = $list->getId();
       ?>
 
       <p>NEW LIST</p>
@@ -23,5 +21,7 @@
       <a href="<?= $absoluteUrl ?>liste/supprimer/<?= $id ?>">Supprimer la liste</a>
 
     <?php endforeach; ?>
+
   </div>
+
 </div>

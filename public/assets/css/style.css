@@ -48,6 +48,31 @@ h1 {
   padding-left: 2rem;
 }
 
+.gift-group {
+  display: flex;
+  gap: 2rem;
+  padding-top: 2rem;
+  padding: 2rem 0 0 2rem;
+}
+
+.gift {
+  padding: 2rem;
+  border: thick double lightsalmon;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 350px;
+}
+
+.gift-item a img {
+  max-width: 250px;
+}
+
+.gift-item h3 {
+  text-align: center;
+}
+
 /* Footer */
 
 footer {

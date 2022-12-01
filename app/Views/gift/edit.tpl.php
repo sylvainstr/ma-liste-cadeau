@@ -1,4 +1,4 @@
-<a href="<?= $absoluteUrl ?>liste">Retour</a>
+<a href="<?= $absoluteUrl ?>liste/<?= $list_id ?>">Retour</a>
 
 <h3>Modification d'un cadeau</h3>
   <form action="" method="post">
@@ -13,9 +13,9 @@
       <label for="name">Nom du cadeau</label>
       <input type="text" name="name" id="name" placeholder="Exemple : Voiture Pat patrouille" value="<?= $gift_edit->getName() ?>">
     </div>
-    <div class="edit-gift-item-description">
-      <label for="description">Description du cadeau</label>
-      <textarea type="text" name="description" id="description" placeholder="Tapez votre message..."><?= $gift_edit->getDescription() ?></textarea>
+    <div class="edit-gift-item-shop">
+      <label for="shop">Nom magasin du cadeau</label>
+      <input type="text" name="shop" id="shop" placeholder="Exemple : King Jouet" value="<?= $gift_edit->getShop() ?>"></input>
     </div>
     <div class="edit-gift-item-price">
       <label for="price">Prix du cadeau</label>
@@ -35,6 +35,6 @@
 
   <div class="edit-gift-button">
     <button type="submit" name="submit">Modifier</button>
-    <a href="<?= $absoluteUrl ?>liste/<?= $lists_id ?>/cadeau/supprimer/<?= $gift_edit->getId(); ?>">Supprimer la liste</a>
+    <a href="<?= $absoluteUrl ?>liste/<?= $list_id ?>/cadeau/supprimer/<?= $gift_edit->getId(); ?>">Supprimer la liste</a>
   </div>
   </form>

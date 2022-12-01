@@ -1,4 +1,4 @@
-<a href="<?= $absoluteUrl ?>liste">Retour</a>
+<a href="<?= $absoluteUrl ?>liste/<?= $list_id ?>">Retour</a>
 
 <h3>Ajout d'un cadeau</h3>
 
@@ -14,9 +14,9 @@
       <label for="name">Nom du cadeau</label>
       <input type="text" name="name" id="name" placeholder="Exemple : Voiture Pat patrouille">
     </div>
-    <div class="add-list-item-description">
-      <label for="description">Description du cadeau</label>
-      <textarea type="text" name="description" id="description" placeholder="Tapez votre message..."></textarea>
+    <div class="add-list-item-shop">
+      <label for="shop">Nom magasin du cadeau</label>
+      <input type="text" name="shop" id="shop" placeholder="Exemple : King Jouet"></input>
     </div>
     <div class="add-gift-item-price">
       <label for="price">Prix du cadeau</label>

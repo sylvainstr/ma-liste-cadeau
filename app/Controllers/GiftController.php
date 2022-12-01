@@ -17,18 +17,18 @@ class GiftController extends CoreController
    */
   public function add($idList)
   {
-    if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['description']) && isset($_POST['url_image_product']) && isset($_POST['preference'])) {
+    if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['shop']) && isset($_POST['url_image_product']) && isset($_POST['preference'])) {
       $urlProduct = $_POST['url_product'];
       $name = $_POST['name'];
       $price = $_POST['price'];
       $urlImgProduct = $_POST['url_image_product'];
 
       // champs avec valeur par défault
-      $description = (!empty($_POST['description'])) ? $_POST['description'] : null;
+      $shop = (!empty($_POST['shop'])) ? $_POST['shop'] : null;
       $preference = (!empty($_POST['preference'])) ? $_POST['preference'] : null;
 
       $newGift = new Gift();
-      $newGift = $newGift->addGift($idList, $urlProduct, $name, $price, $description, $urlImgProduct, $preference);
+      $newGift = $newGift->addGift($idList, $urlProduct, $name, $price, $shop, $urlImgProduct, $preference);
 
       FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été ajoutée', 'FLASH_SUCCESS');
 
@@ -55,16 +55,16 @@ class GiftController extends CoreController
    */
   public function edit($idList, $idGift)
   {
-    if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['description']) && isset($_POST['url_image_product']) && isset($_POST['preference'])) {
+    if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['shop']) && isset($_POST['url_image_product']) && isset($_POST['preference'])) {
       $urlProduct = $_POST['url_product'];
       $name = $_POST['name'];
       $price = $_POST['price'];
-      $description = $_POST['description'];
+      $shop = $_POST['shop'];
       $urlImgProduct = $_POST['url_image_product'];
       $preference = $_POST['preference'];
 
       $editGift = new Gift();
-      $editGift = $editGift->editGift($idGift, $urlProduct, $name, $price, $description, $urlImgProduct, $preference);
+      $editGift = $editGift->editGift($idGift, $urlProduct, $name, $price, $shop, $urlImgProduct, $preference);
 
       FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été modifié', 'FLASH_SUCCESS');
 
@@ -79,7 +79,7 @@ class GiftController extends CoreController
 
     $this->render('gift/edit', [
       'gift_edit' => $giftById,
-      'lists_id' => $idList
+      'list_id' => $idList
     ]);
   }
 

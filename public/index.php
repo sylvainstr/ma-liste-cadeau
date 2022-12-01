@@ -25,6 +25,19 @@ $router->post('/liste/modifier/:id', "List#edit");
 // je consulte ma liste
 $router->get('/liste/:id', "List#read");
 
+// je supprime un utilisateur de ma liste
+$router->get('/liste/:id/amis', "Friends#browse");
+
+// j'invite une utilisateur à ma liste
+$router->get('/liste/:id/inviter/amis', "Friends#addFriend");
+$router->post('/liste/:id/inviter/amis', "Friends#addFriend");
+
+// je supprime un utilisateur de ma liste
+$router->get('/liste/:id/amis/:id/supprimer', "Friends#deleteFriend");
+
+// je supprime tout les utilisateurs de ma liste
+$router->get('/liste/:id/amis/supprimer', "Friends#deleteAllFriends");
+
 // je supprime ma liste de cadeaux
 $router->get('/liste/supprimer/:id', "List#delete");
 
