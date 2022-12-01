@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Utils\Database;
 use App\Models\User;
 use App\Utils\Config;
+use App\Utils\FlashMessage;
 
 class UserController extends CoreController
 {
@@ -32,6 +33,7 @@ class UserController extends CoreController
         $name = strip_tags($_POST["name"]);
         $email = $_POST['email'];
         if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+          FlashMessage::create_flash_message('error', "L'adresse email est incompléte", 'FLASH_ERROR');
           die("L'adresse email est incompléte");
         }
 
@@ -92,6 +94,7 @@ class UserController extends CoreController
         $email = $_POST['email'];
         // On vérifie que c'est bien un email
         if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+          FlashMessage::create_flash_message('error', "Ce n'est pas un email", 'FLASH_ERROR');
           die("Ce n'est pas un email");
         }
 
@@ -99,6 +102,7 @@ class UserController extends CoreController
         $user = $user->searchUser($email);
 
         if (!$user) {
+          FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
           die("L'utilisateur et/ou le mot de passe est incorrect");
         }
 
@@ -107,6 +111,7 @@ class UserController extends CoreController
 
         // Ici on a un user existant, on peut vérifier le mot de passe
         if (!password_verify($_POST["password"], $user->getPassword())) {
+          FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
           die("L'utilisateur et/ou le mot de passe est incorrect");
         }
         // Ici l'utilisateur et le mot de passe son corrects

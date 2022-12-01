@@ -134,6 +134,12 @@ class User extends CoreModel
     return $result;
   }
 
+  /**
+   * Affiche l'utilisateur correspondant à l'email de la table friends
+   *
+   * @param [string] $email : email de l'utilisateur
+   * @return void
+   */
   public function searchUserFriends($email)
   {
     $sql = "

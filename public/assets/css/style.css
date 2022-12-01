@@ -48,6 +48,10 @@ h1 {
   padding-left: 2rem;
 }
 
+.alert-FLASH_ERROR {
+  background-color: lightcoral;
+}
+
 .gift-group {
   display: flex;
   gap: 2rem;

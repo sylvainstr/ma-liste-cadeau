@@ -54,14 +54,17 @@ class FriendsController extends CoreController
 
       // si l'utilisateur n'existe pas en BDD
       if (!$newFriend) {
+        FlashMessage::create_flash_message('error', 'Cette utilisateur n\'existe pas', 'FLASH_ERROR');
         die("Cette utilisateur n'existe pas");
       }
       // L'utilisateur ne peut pas se partager sa propre liste
       elseif ($email == $_SESSION["user"]['email']) {
+        FlashMessage::create_flash_message('error', 'Vous avez déjà accés à cette liste', 'FLASH_ERROR');
         die("Vous avez déjà accés à cette liste");
       } 
       // si l'utilisateur existe déjà en BDD
       elseif ($alreadyFriend) {
+        FlashMessage::create_flash_message('error', 'Cette utilisateur a déjà accés à cette liste', 'FLASH_ERROR');
         die("Cette utilisateur a déjà accés à cette liste");
       }
 
