@@ -134,4 +134,18 @@ class User extends CoreModel
     return $result;
   }
 
+  public function searchUserFriends($email)
+  {
+    $sql = "
+          SELECT * FROM friends
+          WHERE email = '$email'        
+      ";
+
+    $pdo = Database::getPDO();
+    $pdoStatement = $pdo->query($sql);
+    $result = $pdoStatement->fetchObject(User::class);
+    
+    return $result;
+  }
+
 }

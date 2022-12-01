@@ -42,16 +42,29 @@ class FriendsController extends CoreController
       $email = $_POST['email'];
 
       if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-        die("L'adresse email est incompléte");
+        die("Ce n'est pas un email");
       }
 
-      
+
       $newFriend = new User();
       $newFriend = $newFriend->searchUser($email);
 
+      $alreadyFriend = new User();
+      $alreadyFriend = $alreadyFriend->searchUserFriends($email);
+
+      // si l'utilisateur n'existe pas en BDD
       if (!$newFriend) {
         die("Cette utilisateur n'existe pas");
       }
+      // L'utilisateur ne peut pas se partager sa propre liste
+      elseif ($email == $_SESSION["user"]['email']) {
+        die("Vous avez déjà accés à cette liste");
+      } 
+      // si l'utilisateur existe déjà en BDD
+      elseif ($alreadyFriend) {
+        die("Cette utilisateur a déjà accés à cette liste");
+      }
+
 
       /** @var User */
       $newFriend = $newFriend;

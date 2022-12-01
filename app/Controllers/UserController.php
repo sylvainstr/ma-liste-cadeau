@@ -38,9 +38,9 @@ class UserController extends CoreController
         // On va hasher le mot de passe
         $password = password_hash($_POST["password"], PASSWORD_ARGON2ID);
 
-        
+
         // Ajouter ici tous les contrôles souhaités
-        
+
         $user = new User();
 
         $user = $user->addUser($name, $email, $password);
@@ -101,10 +101,10 @@ class UserController extends CoreController
         if (!$user) {
           die("L'utilisateur et/ou le mot de passe est incorrect");
         }
-        
+
         /** @var User */
         $user = $user;
-        
+
         // Ici on a un user existant, on peut vérifier le mot de passe
         if (!password_verify($_POST["password"], $user->getPassword())) {
           die("L'utilisateur et/ou le mot de passe est incorrect");
