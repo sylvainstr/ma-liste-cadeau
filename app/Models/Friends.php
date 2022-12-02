@@ -39,7 +39,7 @@ class Friends
   /**
    * Get the value of user_id
    */
-  public function getUser_id()
+  public function getUserId()
   {
     return $this->user_id;
   }
@@ -49,7 +49,7 @@ class Friends
    *
    * @return  self
    */
-  public function setUser_id(int $user_id)
+  public function setUserId(int $user_id)
   {
     $this->user_id = $user_id;
 
@@ -59,7 +59,7 @@ class Friends
   /**
    * Get the value of lists_id
    */
-  public function getLists_id()
+  public function getListsId()
   {
     return $this->lists_id;
   }
@@ -69,7 +69,7 @@ class Friends
    *
    * @return  self
    */
-  public function setLists_id(int $lists_id)
+  public function setListsId(int $lists_id)
   {
     $this->lists_id = $lists_id;
 
@@ -82,12 +82,12 @@ class Friends
    * @param [int] $idList : identifiant de la liste
    * @return array
    */
-  public function findAllFriends($idList): array
+  public function findShareLists($userId): array
   {
     $sql = "
     SELECT *
-    FROM friends
-    WHERE lists_id = '$idList'
+    FROM share_lists
+    WHERE user_id = '$userId'
     ";
 
     $pdo = Database::getPDO();
@@ -108,7 +108,7 @@ class Friends
   public function inviteFriend($email, $friendId, $idList)
   {
     $sql = "
-          INSERT INTO friends (email, user_id, lists_id)
+          INSERT INTO share_lists (email, user_id, lists_id)
           VALUES ('$email', '$friendId', '$idList')
       ";
     $pdo = Database::getPDO();
@@ -125,7 +125,7 @@ class Friends
   public function deleteFriend($idFriend)
   {
     $sql = "
-          DELETE from friends where user_id = '$idFriend'
+          DELETE from share_lists where user_id = '$idFriend'
       ";
 
     $pdo = Database::getPDO();
@@ -141,7 +141,7 @@ class Friends
   public function deleteAllFriends($idList)
   {
     $sql = "
-          DELETE from friends where lists_id = '$idList'
+          DELETE from share_lists where lists_id = '$idList'
       ";
 
     $pdo = Database::getPDO();

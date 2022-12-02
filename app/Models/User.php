@@ -118,9 +118,9 @@ class User extends CoreModel
    * Affiche l'utilisateur correspondant à l'email
    *
    * @param [string] $email
-   * @return void
+   * @return User
    */
-  public function searchUser($email)
+  public static function searchUser($email)
   {
     $sql = "
           SELECT * FROM user
@@ -143,7 +143,7 @@ class User extends CoreModel
   public function searchUserFriends($email)
   {
     $sql = "
-          SELECT * FROM friends
+          SELECT * FROM share_lists
           WHERE email = '$email'        
       ";
 

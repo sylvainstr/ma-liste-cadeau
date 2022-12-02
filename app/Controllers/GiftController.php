@@ -70,7 +70,7 @@ class GiftController extends CoreController
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
-      header("Location: $absoluteUrl");
+      header("Location: $absoluteUrl" . "liste/" . $idList);
       exit;
     }
 

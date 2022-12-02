@@ -10,7 +10,6 @@ use App\Utils\FlashMessage;
 
 class FriendsController extends CoreController
 {
-
   /**
    * Renvoi les utilisateurs d'une liste
    *
@@ -20,14 +19,13 @@ class FriendsController extends CoreController
   {
 
     $friends = new Friends();
-    $friends = $friends->findAllFriends($idList);
+    $friends = $friends->findShareLists($idList);
 
     $this->render('list/friends', [
       'friends' => $friends,
       'list_id' => $idList
     ]);
   }
-
 
   /**
    * Ajoute un utilisateur à ma liste
@@ -42,12 +40,11 @@ class FriendsController extends CoreController
       $email = $_POST['email'];
 
       if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+        FlashMessage::create_flash_message('error', "Ce n'est pas un email", 'FLASH_ERROR');
         die("Ce n'est pas un email");
       }
 
-
-      $newFriend = new User();
-      $newFriend = $newFriend->searchUser($email);
+      $newFriend = User::searchUser($email);
 
       $alreadyFriend = new User();
       $alreadyFriend = $alreadyFriend->searchUserFriends($email);
@@ -67,11 +64,7 @@ class FriendsController extends CoreController
         FlashMessage::create_flash_message('error', 'Cette utilisateur a déjà accés à cette liste', 'FLASH_ERROR');
         die("Cette utilisateur a déjà accés à cette liste");
       }
-
-
-      /** @var User */
-      $newFriend = $newFriend;
-
+      
       $friendId = $newFriend->getId();
       $friend = new Friends();
       $friend = $friend->inviteFriend($email, $friendId, $idList);

@@ -2,9 +2,12 @@
 
 <a href="<?= $absoluteUrl ?>liste">Retour</a>
 
+
 <a href="<?= $absoluteUrl ?>liste/<?= $id ?>/inviter/amis">Invitez des amis à ma liste</a>
 
-<a href="<?= $absoluteUrl ?>liste/<?= $id ?>/amis">Voir ma liste d'amis</a>
+<?php if (!empty($friends)) : ?>
+  <a href="<?= $absoluteUrl ?>liste/<?= $id ?>/amis">Voir ma liste d'amis</a>
+<?php endif; ?>
 
 <h2><?= ucfirst($list_read->getEvent()) ?></h2>
 <h3><?= $list_read->getTitle() ?></h3>

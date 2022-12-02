@@ -160,6 +160,26 @@ class Lists extends CoreModel
     return $result;
   }
 
+    /**
+   * affiche les lites paratagées d'un utilisateur
+   *
+   * @param [int] $idList : identifiant de la liste
+   * @return Lists
+   */
+  public function getFriendList($idList): Lists
+  {
+    $sql = "
+    SELECT *
+    FROM lists where id = '$idList'
+    ";
+
+    $pdo = Database::getPDO();
+    $pdoStatement = $pdo->query($sql);
+    $result = $pdoStatement->fetchObject(Lists::class);
+
+    return $result;
+  }
+
   /**
    * Affiche une liste
    *

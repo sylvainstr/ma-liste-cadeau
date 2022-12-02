@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Friends;
 use App\Models\Lists;
 use App\Utils\Config;
 use App\Utils\FlashMessage;
@@ -15,13 +16,25 @@ class ListController extends CoreController
    */
   public function browse()
   {
-    $id = $_SESSION['user']['id'];
+    $userId = $_SESSION['user']['id'];
 
     $lists = new Lists();
-    $lists = $lists->findByUserId($id);
+    $lists = $lists->findByUserId($userId);
+
+    $friend = new Friends();
+    $shareLists = $friend->findShareLists($userId);
+
+    $friendList = new Lists();
+
+    $arrayList = [];
+
+    foreach ($shareLists as $shareList) {
+      $arrayList[]= $friendList->getFriendList($shareList->getListsId());
+    }
 
     $this->render('list/list', [
-      'lists' => $lists
+      'lists' => $lists,
+      'friend_lists' => $arrayList
     ]);
   }
 
@@ -33,6 +46,9 @@ class ListController extends CoreController
    */
   public function read($idList)
   {
+    $friends = new Friends();
+    $friends = $friends->findShareLists($idList);
+
     $lists = new Lists();
     $listById = $lists->findOne($idList);
 
@@ -46,7 +62,8 @@ class ListController extends CoreController
 
     $this->render('list/read', [
       'list_read' => $listById,
-      'gifts' => $gifts
+      'gifts' => $gifts,
+      'friends' => $friends
     ]);
   }
 
