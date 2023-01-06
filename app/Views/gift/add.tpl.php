@@ -1,8 +1,8 @@
-<a href="<?= $absoluteUrl ?>liste/<?= $list_id ?>">Retour</a>
+<a href="<?= $absoluteUrl ?>liste">Retour</a>
 
 <h3>Ajout d'un cadeau</h3>
 
-  <form action="<?= $absoluteUrl ?>liste/<?= $list_id ?>/cadeau/ajouter" method="post">
+  <form action="<?= $absoluteUrl ?>liste/cadeau/ajouter" method="post">
   
   <div class="add-gift-group">
 
@@ -26,9 +26,9 @@
       <label for="url_image_product">Lien de l'image du cadeau</label>
       <input type="url" name="url_image_product" id="url_image_product" placeholder="https://www.mon-site-de-jouet.com/image/0026">
     </div>
-    <div class="add-gift-item-preference">
-      <label for="preference">Préférence du cadeau</label>
-      <input type="number" name="preference" id="preference">
+    <div class="add-gift-item-rank">
+      <label for="rank">Préférence du cadeau</label>
+      <input type="number" name="rank" id="rank">
     </div>
 
 

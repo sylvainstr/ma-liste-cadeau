@@ -2,105 +2,162 @@
 
 namespace App\Models;
 
-use App\Utils\Database;
 use PDO;
+use App\Models\Gift;
+use App\Utils\Database;
+use App\Models\CoreModel;
 
-class Lists extends CoreModel
+class Event extends CoreModel
 {
 
-  static public $eventsType = [
-    'anniversaire' => 'Anniversaire',
-    'naissance' => 'Naissance',
-    'mariage' => 'Mariage',
-    'noël' => 'Noël'
-  ];
-
-  private $event;
-  private $title;
-  private $subtitle;
-  private $message;
-
+  private $name;
+  private $description;
+  private $targetUser;
+  private $createdAt;
+  private $createdBy;
+  private $updatedAt;
+  private $endAt;
 
   /**
-   * Get the value of event
-   */
-  public function getEvent()
+   * Get the value of name
+   */ 
+  public function getName()
   {
-    return $this->event;
+    return $this->name;
   }
 
   /**
-   * Set the value of event
+   * Set the value of name
    *
    * @return  self
-   */
-  public function setEvent($event)
+   */ 
+  public function setName($name)
   {
-    $this->event = $event;
+    $this->name = $name;
 
     return $this;
   }
 
   /**
-   * Get the value of title
-   */
-  public function getTitle()
+   * Get the value of description
+   */ 
+  public function getDescription()
   {
-    return $this->title;
+    return $this->description;
   }
 
   /**
-   * Set the value of title
+   * Set the value of description
    *
    * @return  self
-   */
-  public function setTitle($title)
+   */ 
+  public function setDescription($description)
   {
-    $this->title = $title;
+    $this->description = $description;
+
+    return $this;
+  }
+
+    /**
+   * Get the value of targetUser
+   */ 
+  public function getTargetUser()
+  {
+    return $this->targetUser;
+  }
+
+  /**
+   * Set the value of targetUser
+   *
+   * @return  self
+   */ 
+  public function setTargetUser($targetUser)
+  {
+    $this->targetUser = $targetUser;
 
     return $this;
   }
 
   /**
-   * Get the value of subtitle
-   */
-  public function getSubtitle()
+   * Get the value of createdAt
+   */ 
+  public function getCreatedAt()
   {
-    return $this->subtitle;
+    return $this->createdAt;
   }
+
+  /**
+   * Set the value of createdAt
+   *
+   * @return  self
+   */ 
+  public function setCreatedAt($createdAt)
+  {
+    $this->createdAt = $createdAt;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of createdBy
+   */ 
+  public function getCreatedBy()
+  {
+    return $this->createdBy;
+  }
+
+  /**
+   * Set the value of createdBy
+   *
+   * @return  self
+   */ 
+  public function setCreatedBy($createdBy)
+  {
+    $this->createdBy = $createdBy;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of updatedAt
+   */ 
+  public function getUpdatedAt()
+  {
+    return $this->updatedAt;
+  }
+
+  /**
+   * Set the value of updatedAt
+   *
+   * @return  self
+   */ 
+  public function setUpdatedAt($updatedAt)
+  {
+    $this->updatedAt = $updatedAt;
+
+    return $this;
+  }
+
+  /**
+   * Get the value of endAt
+   */ 
+  public function getEndAt()
+  {
+    return $this->endAt;
+  }
+
+  /**
+   * Set the value of endAt
+   *
+   * @return  self
+   */ 
+  public function setEndAt($endAt)
+  {
+    $this->endAt = $endAt;
+
+    return $this;
+  } 
   
-  /**
-   * Set the value of subtitle
-   *
-   * @return  self
-   */
-  public function setSubtitle($subtitle)
-  {
-    $this->subtitle = $subtitle;
-    
-    return $this;
-  }
-  
-  /**
-   * Get the value of message
-   */
-  public function getMessage()
-  {
-    return $this->message;
-  }
-  
-  /**
-   * Set the value of message
-   *
-   * @return  self
-   */
-  public function setMessage($message)
-  {
-    $this->message = $message;
-    
-    return $this;
-  }
-
   /**
    * Affiche le(s) cadeau(x) d'une liste
    *
@@ -267,5 +324,4 @@ class Lists extends CoreModel
     $pdo = Database::getPDO();
     $pdo->query($sql);
   }
-
 }

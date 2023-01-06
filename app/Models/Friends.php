@@ -7,71 +7,45 @@ use PDO;
 
 class Friends
 {
-  private $email;
-  private $user_id;
-  private $lists_id;
-
-  public function __toString()
-  {
-    return $this->email;
-  }
+  private $userId;
+  private $friendId;
 
   /**
-   * Get the value of email
-   */
-  public function getEmail()
-  {
-    return $this->email;
-  }
-
-  /**
-   * Set the value of email
-   *
-   * @return  self
-   */
-  public function setEmail($email)
-  {
-    $this->email = $email;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of user_id
-   */
+   * Get the value of userId
+   */ 
   public function getUserId()
   {
-    return $this->user_id;
+    return $this->userId;
   }
 
   /**
-   * Set the value of user_id
+   * Set the value of userId
    *
    * @return  self
-   */
-  public function setUserId(int $user_id)
+   */ 
+  public function setUserId($userId)
   {
-    $this->user_id = $user_id;
+    $this->userId = $userId;
 
     return $this;
   }
 
   /**
-   * Get the value of lists_id
-   */
-  public function getListsId()
+   * Get the value of friendId
+   */ 
+  public function getFriendId()
   {
-    return $this->lists_id;
+    return $this->friendId;
   }
 
   /**
-   * Set the value of lists_id
+   * Set the value of friendId
    *
    * @return  self
-   */
-  public function setListsId(int $lists_id)
+   */ 
+  public function setFriendId($friendId)
   {
-    $this->lists_id = $lists_id;
+    $this->friendId = $friendId;
 
     return $this;
   }
@@ -82,11 +56,11 @@ class Friends
    * @param [int] $idList : identifiant de la liste
    * @return array
    */
-  public function findShareLists($userId): array
+  public function findShareEvents($userId): array
   {
     $sql = "
     SELECT *
-    FROM share_lists
+    FROM friends
     WHERE user_id = '$userId'
     ";
 
@@ -105,11 +79,11 @@ class Friends
    * @param [int] $idList : identifiant de la liste
    * @return void
    */
-  public function inviteFriend($email, $friendId, $idList)
+  public function inviteFriend($friendId)
   {
     $sql = "
-          INSERT INTO share_lists (email, user_id, lists_id)
-          VALUES ('$email', '$friendId', '$idList')
+          INSERT INTO share_lists (user_id)
+          VALUES ('$friendId')
       ";
     $pdo = Database::getPDO();
     $pdo->exec($sql);
@@ -147,4 +121,5 @@ class Friends
     $pdo = Database::getPDO();
     $pdo->query($sql);
   }
+
 }

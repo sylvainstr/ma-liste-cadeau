@@ -1,6 +1,6 @@
 <?php if (isset($_SESSION["user"])) : ?>
 
-  <a href="<?= $absoluteUrl ?>liste/<?= $list_id->getId() ?>">Retour</a>
+  <a href="<?= $absoluteUrl ?>liste">Retour</a>
 
 
   <h3>Ajout d'un ami</h3>

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Utils\Database;
-use PDO;
+use App\Models\CoreModel;
+use DateTime;
 
 class Gift extends CoreModel
 {
@@ -13,8 +13,23 @@ class Gift extends CoreModel
   private $price;
   private $shop;
   private $url_image_product;
-  private $preference;
+  private $rank;
+  private $createdAt;
+  private $updatedAt;
+  private $user_id;
 
+  public function __construct($url_product, $name, $price, $shop, $url_image_product, $rank, $user_id)
+  {
+    $this->url_product = $url_product;
+    $this->name = $name;
+    $this->price = $price;
+    $this->shop = $shop;
+    $this->url_image_product = $url_image_product;
+    $this->rank = $rank;
+    $this->user_id = $user_id;
+    $this->createdAt = new DateTime();
+    $this->updatedAt = new DateTime();
+  }
 
   /**
    * Get the value of urlProduct
@@ -29,9 +44,9 @@ class Gift extends CoreModel
    *
    * @return  self
    */
-  public function setUrlProduct($urlProduct)
+  public function setUrlProduct($url_product)
   {
-    $this->url_product = $urlProduct;
+    $this->url_product = $url_product;
 
     return $this;
   }
@@ -49,7 +64,7 @@ class Gift extends CoreModel
    *
    * @return  self
    */
-  public function setName(string $name)
+  public function setName($name)
   {
     $this->name = $name;
 
@@ -69,7 +84,7 @@ class Gift extends CoreModel
    *
    * @return  self
    */
-  public function setPrice(int $price)
+  public function setPrice($price)
   {
     $this->price = $price;
 
@@ -109,177 +124,90 @@ class Gift extends CoreModel
    *
    * @return  self
    */
-  public function setUrlImageProduct($urlImageProduct)
+  public function setUrlImageProduct($url_image_product)
   {
-    $this->url_image_product = $urlImageProduct;
+    $this->url_image_product = $url_image_product;
 
     return $this;
   }
 
   /**
-   * Get the value of preference
+   * Get the value of rank
    */
-  public function getPreference()
+  public function getRank()
   {
-    return $this->preference;
+    return $this->rank;
   }
 
   /**
-   * Set the value of preference
+   * Set the value of rank
    *
    * @return  self
    */
-  public function setPreference(int $preference)
+  public function setRank($rank)
   {
-    $this->preference = $preference;
+    $this->rank = $rank;
 
     return $this;
   }
 
   /**
-   * Récupére tous les cadeaux
-   *
-   * @return array
+   * Get the value of createdAt
    */
-  public function findAll(): array
+  public function getCreatedAt()
   {
-    $sql = '
-          SELECT *
-          FROM gift
-      ';
-
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Lists::class);
-
-    return $result;
+    return $this->createdAt;
   }
 
   /**
-   * Affiche les cadeaux d'une liste
+   * Set the value of createdAt
    *
-   * @param [int] $id : identifiant d'une liste
-   * @return array
+   * @return  self
    */
-  public function findByListId($idList): array
+  public function setCreatedAt($createdAt)
   {
-    $sql = "
-          SELECT *
-          FROM gift where lists_id = '$idList'
-      ";
+    $this->createdAt = $createdAt;
 
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Gift::class);
-
-    return $result;
+    return $this;
   }
 
   /**
-   * Affiche un cadeau
-   *
-   * @param [int] $idGift : identifiant d'un cadeau
-   * @return void
+   * Get the value of updatedAt
    */
-  public function findOne($idGift)
+  public function getUpdatedAt()
   {
-    $sql = "
-          SELECT *
-          FROM gift where id = '$idGift'
-      ";
-
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchObject(Gift::class);
-
-    $verif = $pdoStatement->rowCount();
-    $badId = false;
-    if ($verif <= 0) {
-      $badId = true;
-    }
-
-    return $result;
+    return $this->updatedAt;
   }
 
   /**
-   * Ajoute un cadeau
+   * Set the value of updatedAt
    *
-   * @param [int] $idList : identifiant d'une liste
-   * @param [string] $urlProduct : lien du cadeau
-   * @param [string] $name : nom du cadeau
-   * @param [int] $price : prix du cadeau
-   * @param [string] $shop : shop du cadeau
-   * @param [string] $urlImgProduct : lien de l'image du cadeau
-   * @param [int] $preference : préférence du cadeau
-   * @return void
+   * @return  self
    */
-  public function addGift($idList, $urlProduct, $name, $price, $shop, $urlImgProduct, $preference)
+  public function setUpdatedAt($updatedAt)
   {
-    $fields = [
-      'lists_id' => $idList,
-      'url_product' => $urlProduct,
-      'name' => $name,
-      'price' => $price,
-      'url_image_product' => $urlImgProduct,
-      'shop' => $shop
-    ];
+    $this->updatedAt = $updatedAt;
 
-    if ($preference !== null) {
-      $fields['preference'] = $preference;
-    }
-
-    $sql = "
-          INSERT INTO gift (" . implode(", ", array_keys($fields)) . ")
-          VALUES ('" . implode("', '", array_values($fields)) . "')
-      ";
-      
-    $pdo = Database::getPDO();
-    $pdo->exec($sql) or die(print_r($pdo->errorInfo(), true));
+    return $this;
   }
 
   /**
-   * Modifie un cadeau
-   *
-   * @param [type] $idList : identifiant d'une liste
-   * @param [type] $urlProduct : lien du cadeau
-   * @param [type] $name : nom du cadeau
-   * @param [type] $price : prix du cadeau
-   * @param [type] $shop : shop du cadeau
-   * @param [type] $urlImgProduct : lien de l'image du cadeau
-   * @param [type] $preference : préférence du cadeau
-   * @return void
+   * Get the value of userId
    */
-  public function editGift($idList, $urlProduct, $name, $price, $shop, $urlImgProduct, $preference)
+  public function getUserId()
   {
-    $sql = "
-          UPDATE gift set
-          url_product = '$urlProduct',
-          name = '$name',
-          price = '$price',
-          shop = '$shop',
-          url_image_product = '$urlImgProduct',
-          preference = '$preference',
-          updated_at = NOW()
-          where id = '$idList'
-      ";
-
-    $pdo = Database::getPDO();
-    $pdo->query($sql);
+    return $this->user_id;
   }
 
   /**
-   * Supprime un cadeau
+   * Set the value of userId
    *
-   * @param [type] $idGift : identifiant d'un cadeau
-   * @return void
+   * @return  self
    */
-  public function deleteGift($idGift)
+  public function setUserId($user_id)
   {
-    $sql = "
-          DELETE from gift where id = '$idGift'
-      ";
+    $this->user_id = $user_id;
 
-    $pdo = Database::getPDO();
-    $pdo->query($sql);
+    return $this;
   }
 }

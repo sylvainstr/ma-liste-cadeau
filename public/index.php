@@ -14,43 +14,36 @@ $router->get('/', "Main#home");
 // je consulte mes listes de cadeaux
 $router->get('/liste', "List#browse");
 
-// je crée ma liste de cadeaux
-$router->get('/liste/ajouter', "List#add");
-$router->post('/liste/ajouter', "List#add");
-
-// je modifie ma liste de cadeaux
-$router->get('/liste/modifier/:id', "List#edit");
-$router->post('/liste/modifier/:id', "List#edit");
-
-// je consulte ma liste
-$router->get('/liste/:id', "List#read");
-
-// je supprime un utilisateur de ma liste
-$router->get('/liste/:id/amis', "Friends#browse");
-
-// j'invite une utilisateur à ma liste
-$router->get('/liste/:id/inviter/amis', "Friends#addFriend");
-$router->post('/liste/:id/inviter/amis', "Friends#addFriend");
-
-// je supprime un utilisateur de ma liste
-$router->get('/liste/:id/amis/:id/supprimer', "Friends#deleteFriend");
-
-// je supprime tout les utilisateurs de ma liste
-$router->get('/liste/:id/amis/supprimer', "Friends#deleteAllFriends");
-
-// je supprime ma liste de cadeaux
-$router->get('/liste/supprimer/:id', "List#delete");
-
 // j'ajoute un cadeau à ma liste
-$router->get('/liste/:id/cadeau/ajouter', "Gift#add");
-$router->post('/liste/:id/cadeau/ajouter', "Gift#add");
+$router->get('/liste/cadeau/ajouter', "Gift#add");
+$router->post('/liste/cadeau/ajouter', "Gift#add");
 
 // je modifie un cadeau à ma liste
-$router->get('/liste/:id/cadeau/modifier/:giftid', "Gift#edit");
-$router->post('/liste/:id/cadeau/modifier/:giftid', "Gift#edit");
+$router->get('/liste/cadeau/modifier/:giftid', "Gift#edit");
+$router->post('/liste/cadeau/modifier/:giftid', "Gift#edit");
 
 // je supprime un cadeau à ma liste
-$router->get('/liste/:id/cadeau/supprimer/:giftid', "Gift#delete");
+$router->get('/liste/cadeau/supprimer/:giftid', "Gift#delete");
+
+// j'invite une utilisateur à ma liste d'amis
+$router->get('/liste/inviter/amis', "Friends#invit");
+$router->post('/liste/inviter/amis', "Friends#invit");
+
+// je consulte mon événement
+$router->get('/evenement/:id', "Event#read");
+
+// je consulte les utilisateurs d'un événement
+$router->get('/evenement/:id/amis', "Friends#browse");
+
+// j'invite une utilisateur à mon événement
+$router->get('/evenement/:id/inviter/amis', "Friends#addFriend");
+$router->post('/evenement/:id/inviter/amis', "Friends#addFriend");
+
+// je supprime un utilisateur de mon événement
+$router->get('/evenement/:id/amis/:id/supprimer', "Friends#deleteFriend");
+
+// je supprime tout les utilisateurs de mon événement
+$router->get('/evenement/:id/amis/supprimer', "Friends#deleteAllFriends");
 
 // j'accéde au formulaire d'inscription
 $router->get('/inscription', "User#register");

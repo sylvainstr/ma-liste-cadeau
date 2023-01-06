@@ -1,46 +1,47 @@
-  <a href="<?= $absoluteUrl ?>liste/ajouter">Ajouter une liste</a>
-
   <div class="lists">
-    <h2>Mes listes</h2>
 
-    <?php foreach ($lists as $list) : ?>
+    <a href="<?= $absoluteUrl ?>liste/inviter/amis">Invitez des amis à ma liste</a>
 
-      <?php
-      $id = $list->getId();
-      ?>
+    <a href="<?= $absoluteUrl ?>liste/cadeau/ajouter">Ajouter un cadeau</a>
 
-      <p>NEW LIST</p>
+    <?php if (!empty($friends)) : ?>
+      <a href="<?= $absoluteUrl ?>liste/amis">Voir ma liste d'amis</a>
+    <?php endif; ?>
 
-      <h3><?= ucfirst($list->getEvent()) ?></h3>
-      <h3><?= $list->getTitle() ?></h3>
-      <h3><?= $list->getSubtitle() ?></h3>
-      <h3><?= $list->getMessage() ?></h3>
+    <h2>Ma liste de cadeaux</h2>
 
-      <a href="<?= $absoluteUrl ?>liste/<?= $id ?>">Voir la liste</a>
-      <a href="<?= $absoluteUrl ?>liste/modifier/<?= $id ?>">Modifier la liste</a>
-      <a href="<?= $absoluteUrl ?>liste/supprimer/<?= $id ?>">Supprimer la liste</a>
+    <div class="gift-group">
+      <?php foreach ($gifts as $gift) : ?>
 
-    <?php endforeach; ?>
+        <div class="gift">
+          <div class="gift-item">
+            <a href="<?= $gift->getUrlProduct() ?>" target="_blank">
+              <img src="<?= $gift->getUrlImageProduct() ?>" alt="image du cadeau">
+            </a>
+          </div>
+          <div class="gift-item">
+            <h3><?= $gift->getName() ?></h3>
+          </div>
+          <div class="gift-item">
+            <h3><a href="<?= $gift->getUrlProduct() ?>" target="_blank">Chez <?= $gift->getShop() ?></a></h3>
+          </div>
+          <div class="gift-item">
+            <h3><?= $gift->getPrice() ?></h3>
+          </div>
 
-    <h2>Mes listes paratagées</h2>
+          <div class="gift-item">
+            <h3><?= $gift->getRank() ?></h3>
+          </div>
 
-    <?php foreach ($friend_lists as $friend_list) : ?>
+          <a href="#">J'offre ce cadeau</a>
 
-      <?php
-      $id = $friend_list->getId();
-      ?>
+          <a href="<?= $absoluteUrl ?>liste/cadeau/modifier/<?= $gift->getId() ?>">Modifier le cadeau</a>
+          <a href="<?= $absoluteUrl ?>liste/cadeau/supprimer/<?= $gift->getId() ?>">Supprimer le cadeau</a>
 
-      <p>NEW LIST</p>
+        </div>
+      <?php endforeach; ?>
+    </div>
 
-      <h3><?= ucfirst($friend_list->getEvent()) ?></h3>
-      <h3><?= $friend_list->getTitle() ?></h3>
-      <h3><?= $friend_list->getSubtitle() ?></h3>
-      <h3><?= $friend_list->getMessage() ?></h3>
 
-      <a href="<?= $absoluteUrl ?>liste/<?= $id ?>">Voir la liste</a>
-      <a href="<?= $absoluteUrl ?>liste/modifier/<?= $id ?>">Modifier la liste</a>
-      <a href="<?= $absoluteUrl ?>liste/supprimer/<?= $id ?>">Supprimer la liste</a>
-
-    <?php endforeach; ?>
 
   </div>

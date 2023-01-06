@@ -22,7 +22,7 @@
       <a href="<?= $absoluteUrl ?>connexion">Se connecter</a>
       <a href="<?= $absoluteUrl ?>inscription">S'inscrire</a>
     <?php else : ?>
-      <a href="<?= $absoluteUrl ?>liste">Mes Listes</a>
+      <a href="<?= $absoluteUrl ?>liste">Ma liste de cadeaux</a>
       <a href="<?= $absoluteUrl ?>deconnexion">Se Déconnecter</a>
     <?php endif; ?>
 

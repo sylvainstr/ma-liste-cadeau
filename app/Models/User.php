@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Utils\Database;
-use PDO;
-
 class User extends CoreModel
 {
 
@@ -12,8 +9,16 @@ class User extends CoreModel
   private $password;
   private $name;
   private $role;
+  private $createdAt;
+  private $updatedAt;
 
-
+  public function __construct($name, $email, $password)
+  {
+    $this->name = $name;
+    $this->email = $email;
+    $this->password = $password;
+  }
+  
   /**
    * Get the value of email
    */ 
@@ -95,63 +100,42 @@ class User extends CoreModel
   }
 
   /**
-   * Ajout d'un utilisateur
-   *
-   * @param [string] $name : nom de l'utilisateur
-   * @param [string] $email : email de l'utilisateur
-   * @param [string] $password : mot de passe de l'utilisateur
-   * @param [string] $role : role de l'utilisateur
-   * @return void
-   */
-  public function addUser($name, $email, $password)
+   * Get the value of createdAt
+   */ 
+  public function getCreatedAt()
   {
-    $sql = "
-          INSERT INTO user (name, email, password, role)
-          VALUES ('$name', '$email', '$password', '[\"ROLE_USER\"]')
-      ";
-
-    $pdo = Database::getPDO();
-    $pdo->exec($sql);
+    return $this->createdAt;
   }
 
   /**
-   * Affiche l'utilisateur correspondant à l'email
+   * Set the value of createdAt
    *
-   * @param [string] $email
-   * @return User
-   */
-  public static function searchUser($email)
+   * @return  self
+   */ 
+  public function setCreatedAt($createdAt)
   {
-    $sql = "
-          SELECT * FROM user
-          WHERE email = '$email'         
-      ";
+    $this->createdAt = $createdAt;
 
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchObject(User::class);
-    
-    return $result;
+    return $this;
   }
 
   /**
-   * Affiche l'utilisateur correspondant à l'email de la table friends
-   *
-   * @param [string] $email : email de l'utilisateur
-   * @return void
-   */
-  public function searchUserFriends($email)
+   * Get the value of updatedAt
+   */ 
+  public function getUpdatedAt()
   {
-    $sql = "
-          SELECT * FROM share_lists
-          WHERE email = '$email'        
-      ";
-
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchObject(User::class);
-    
-    return $result;
+    return $this->updatedAt;
   }
 
+  /**
+   * Set the value of updatedAt
+   *
+   * @return  self
+   */ 
+  public function setUpdatedAt($updatedAt)
+  {
+    $this->updatedAt = $updatedAt;
+
+    return $this;
+  }
 }

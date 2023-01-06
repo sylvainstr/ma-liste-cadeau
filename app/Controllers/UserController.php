@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Utils\Database;
 use App\Models\User;
+use App\Repository\UserRepository;
 use App\Utils\Config;
 use App\Utils\FlashMessage;
 
@@ -43,9 +44,13 @@ class UserController extends CoreController
 
         // Ajouter ici tous les contrôles souhaités
 
-        $user = new User();
-
-        $user = $user->addUser($name, $email, $password);
+        try {
+          $newUser = new User($name, $email, $password);
+          $userRepo = new UserRepository();
+          $userRepo->add($newUser);
+        } catch (\Exception $exception) {
+          var_dump($exception->getMessage());
+        }
 
         // On récupére l'id du nouvel utilisateur
         $pdo = Database::getPDO();
@@ -92,36 +97,42 @@ class UserController extends CoreController
       // On vérifie que tous les champs requis sont remplis
       if (isset($_POST["email"], $_POST["password"]) && !empty($_POST["email"]) && !empty($_POST["password"])) {
         $email = $_POST['email'];
+
+
         // On vérifie que c'est bien un email
         if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
           FlashMessage::create_flash_message('error', "Ce n'est pas un email", 'FLASH_ERROR');
           die("Ce n'est pas un email");
         }
 
-        $user = new User();
-        $user = $user->searchUser($email);
+        $email = $_POST['email'];
 
-        if (!$user) {
-          FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
-          die("L'utilisateur et/ou le mot de passe est incorrect");
+        try {
+          $userRepo = new UserRepository();
+          $user = $userRepo->findByEmail($email);
+          if (!$user) {
+            FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
+            die("L'utilisateur et/ou le mot de passe est incorrect");
+          }
+
+          // Ici on a un user existant, on peut vérifier le mot de passe
+          if (!password_verify($_POST["password"], $user->getPassword())) {
+            FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
+            die("L'utilisateur et/ou le mot de passe est incorrect");
+          }
+          // Ici l'utilisateur et le mot de passe son corrects
+          // On va pouvoir "connecter" l'utilisateur       
+          // On stocke dans $_SESSION les informations de l'utilisateur
+          $_SESSION["user"] = [
+            "id" => $user->getId(),
+            "name" => $user->getName(),
+            "email" => $user->getEmail()
+          ];
+        } catch (\Exception $exception) {
+          var_dump($exception->getMessage());
         }
 
-        /** @var User */
-        $user = $user;
 
-        // Ici on a un user existant, on peut vérifier le mot de passe
-        if (!password_verify($_POST["password"], $user->getPassword())) {
-          FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
-          die("L'utilisateur et/ou le mot de passe est incorrect");
-        }
-        // Ici l'utilisateur et le mot de passe son corrects
-        // On va pouvoir "connecter" l'utilisateur       
-        // On stocke dans $_SESSION les informations de l'utilisateur
-        $_SESSION["user"] = [
-          "id" => $user->getId(),
-          "name" => $user->getName(),
-          "email" => $user->getEmail()
-        ];
 
         // On redirige vers la page d'acceuil
         $config = Config::getInstance();

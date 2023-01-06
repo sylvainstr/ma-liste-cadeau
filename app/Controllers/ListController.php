@@ -2,15 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Models\Friends;
-use App\Models\Lists;
-use App\Utils\Config;
-use App\Utils\FlashMessage;
+use App\Repository\UserRepository;
 
 class ListController extends CoreController
 {
   /**
-   * Renvoi les listes par utilisateurs
+   * Renvoi la liste de cadeaux par utilisateurs
    *
    * @return void
    */
@@ -18,131 +15,12 @@ class ListController extends CoreController
   {
     $userId = $_SESSION['user']['id'];
 
-    $lists = new Lists();
-    $lists = $lists->findByUserId($userId);
-
-    $friend = new Friends();
-    $shareLists = $friend->findShareLists($userId);
-
-    $friendList = new Lists();
-
-    $arrayList = [];
-
-    foreach ($shareLists as $shareList) {
-      $arrayList[]= $friendList->getFriendList($shareList->getListsId());
-    }
+    $giftRepo = new UserRepository();
+    $gifts = $giftRepo->findByUserId($userId);
 
     $this->render('list/list', [
-      'lists' => $lists,
-      'friend_lists' => $arrayList
+      'gifts' => $gifts
     ]);
   }
-
-  /**
-   * Consultation de la liste par l'id
-   *
-   * @param int $idList : id de la liste
-   * @return void
-   */
-  public function read($idList)
-  {
-    $friends = new Friends();
-    $friends = $friends->findShareLists($idList);
-
-    $lists = new Lists();
-    $listById = $lists->findOne($idList);
-
-    // l'id n'existe pas
-    if (empty($listById)) {
-      $errorController = new ErrorController();
-      return $errorController->notFound();
-    }
-
-    $gifts = $listById->getGifts();
-
-    $this->render('list/read', [
-      'list_read' => $listById,
-      'gifts' => $gifts,
-      'friends' => $friends
-    ]);
-  }
-
-  /**
-   * Ajouter une liste
-   *
-   * @return void
-   */
-  public function add()
-  {
-    if (isset($_POST['event']) && isset($_POST['title']) && isset($_POST['message'])) {
-      $event = $_POST['event'];
-      $title = $_POST['title'];
-      $subtitle = $_POST['subtitle'];
-      $message = $_POST['message'];
-
-      $newList = new Lists();
-      $newList = $newList->addList($event, $title, $subtitle, $message);
-
-      FlashMessage::create_flash_message('list_add_success', 'Votre liste a été ajoutée', 'FLASH_SUCCESS');
-
-      $config = Config::getInstance();
-      $absoluteUrl =  $config['ABSOLUTE_URL'];
-      header("Location: $absoluteUrl");
-      exit;
-    }
-
-    $this->render('list/add');
-  }
-
-  /**
-   * Modifier une liste
-   *
-   * @param int $idList : id de la liste
-   * @return void
-   */
-  public function edit($idList)
-  {
-    if (isset($_POST['event']) && isset($_POST['title']) && isset($_POST['message'])) {
-      $event = $_POST['event'];
-      $title = $_POST['title'];
-      $subtitle = $_POST['subtitle'];
-      $message = $_POST['message'];
-
-      $editList = new Lists();
-      $editList = $editList->editList($idList, $event, $title, $subtitle, $message);
-
-      FlashMessage::create_flash_message('list_add_success', 'Votre liste a été modifiée', 'FLASH_SUCCESS');
-
-      $config = Config::getInstance();
-      $absoluteUrl =  $config['ABSOLUTE_URL'];
-      header("Location: $absoluteUrl");
-      exit;
-    }
-
-    $list = new Lists();
-    $listById = $list->findOne($idList);
-
-    $this->render('list/edit', [
-      'list_edit' => $listById
-    ]);
-  }
-
-  /**
-   * Supprimer une liste
-   *
-   * @param int $idList : id de la liste
-   * @return void
-   */
-  public function delete($idList)
-  {
-    $deleteList = new Lists();
-    $deleteList = $deleteList->deleteList($idList);
-
-    FlashMessage::create_flash_message('list_add_success', 'Votre liste a été supprimée', 'FLASH_SUCCESS');
-
-    $config = Config::getInstance();
-    $absoluteUrl =  $config['ABSOLUTE_URL'];
-    header("Location: $absoluteUrl");
-    exit;
-  }
+  
 }
