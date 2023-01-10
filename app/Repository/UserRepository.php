@@ -54,26 +54,6 @@ class UserRepository
   }
 
   /**
-   * affiche les cadeaux d'un utilisateur
-   *
-   * @param [int] $userId : identifiant de l'utilisateur
-   * @return array
-   */
-  public function findByUserId($userId)
-  {
-    $sql = "
-    SELECT *
-    FROM gift where user_id = '$userId'
-    ";
-
-    $pdoStatement = $this->pdo->query($sql);
-    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class, ['name', 'email', 'password']);
-    $result = $pdoStatement->fetch();
-
-    return $result;
-  }
-
-  /**
    * Affiche l'utilisateur correspondant à l'email de la table friends
    *
    * @param [string] $email : email de l'utilisateur
@@ -83,10 +63,9 @@ class UserRepository
   {
     $sql = "
           SELECT * FROM friends
-          WHERE email = '$email'        
+          WHERE friend_id = '$email'        
       ";
 
-    $pdo = Database::getPDO();
     $pdoStatement = $this->pdo->query($sql);
     $result = $pdoStatement->fetchObject(User::class);
 

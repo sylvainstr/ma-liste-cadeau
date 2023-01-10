@@ -31,7 +31,7 @@ class FriendsController extends CoreController
 
       $userRepo = new UserRepository();
       $newFriend = $userRepo->findByEmail($email);
-
+      
       $alreadyFriend = new UserRepository();
       $alreadyFriend = $alreadyFriend->searchUserFriends($email);
 
@@ -59,7 +59,7 @@ class FriendsController extends CoreController
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
-      header("Location: $absoluteUrl" . "liste/");
+      header("Location: $absoluteUrl" . "liste");
       exit;
     }
 

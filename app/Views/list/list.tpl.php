@@ -11,6 +11,7 @@
     <h2>Ma liste de cadeaux</h2>
 
     <div class="gift-group">
+
       <?php foreach ($gifts as $gift) : ?>
 
         <div class="gift">

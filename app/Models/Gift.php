@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\CoreModel;
-use DateTime;
 
 class Gift extends CoreModel
 {
@@ -14,8 +13,6 @@ class Gift extends CoreModel
   private $shop;
   private $url_image_product;
   private $rank;
-  private $createdAt;
-  private $updatedAt;
   private $user_id;
 
   public function __construct($url_product, $name, $price, $shop, $url_image_product, $rank, $user_id)
@@ -27,8 +24,6 @@ class Gift extends CoreModel
     $this->url_image_product = $url_image_product;
     $this->rank = $rank;
     $this->user_id = $user_id;
-    $this->createdAt = new DateTime();
-    $this->updatedAt = new DateTime();
   }
 
   /**
@@ -147,46 +142,6 @@ class Gift extends CoreModel
   public function setRank($rank)
   {
     $this->rank = $rank;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of createdAt
-   */
-  public function getCreatedAt()
-  {
-    return $this->createdAt;
-  }
-
-  /**
-   * Set the value of createdAt
-   *
-   * @return  self
-   */
-  public function setCreatedAt($createdAt)
-  {
-    $this->createdAt = $createdAt;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of updatedAt
-   */
-  public function getUpdatedAt()
-  {
-    return $this->updatedAt;
-  }
-
-  /**
-   * Set the value of updatedAt
-   *
-   * @return  self
-   */
-  public function setUpdatedAt($updatedAt)
-  {
-    $this->updatedAt = $updatedAt;
 
     return $this;
   }

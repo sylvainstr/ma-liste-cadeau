@@ -37,6 +37,26 @@ class GiftRepository
   }
 
   /**
+   * affiche les cadeaux d'un utilisateur
+   *
+   * @param [int] $userId : identifiant de l'utilisateur
+   * @return array
+   */
+  public function findByUserId($userId)
+  {
+    $sql = "
+    SELECT *
+    FROM gift where user_id = '$userId'
+    ";
+
+    $pdoStatement = $this->pdo->query($sql);
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Gift::class, ['url_product', 'name', 'price', 'shop', 'url_image_product', 'rank', 'user_id']);
+    $result = $pdoStatement->fetchAll();
+
+    return $result;
+  }
+
+  /**
    * Affiche un cadeau
    *
    * @param [int] $idGift : identifiant d'un cadeau
@@ -51,14 +71,8 @@ class GiftRepository
 
 
     $pdoStatement = $this->pdo->query($sql);
-    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class, ['url_product', 'name', 'price', 'shop', 'url_image_product', 'rank']);
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Gift::class, ['url_product', 'name', 'price', 'shop', 'url_image_product', 'rank', 'user_id']);
     $result = $pdoStatement->fetch();
-
-    $verif = $pdoStatement->rowCount();
-    $badId = false;
-    if ($verif <= 0) {
-      $badId = true;
-    }
 
     return $result;
   }
@@ -135,7 +149,6 @@ class GiftRepository
               user_id = :user_id
             WHERE 
               id = :id
-            
           ";
 
     $pdoStatement = $this->pdo->prepare($sql);
@@ -146,6 +159,7 @@ class GiftRepository
     $pdoStatement->bindValue('url_image_product', $gift->getUrlImageProduct());
     $pdoStatement->bindValue('rank', $gift->getRank());
     $pdoStatement->bindValue('user_id', $gift->getUserId());
+    $pdoStatement->bindValue('id', $gift->getId());
 
     $result = $pdoStatement->execute();
     if (!$result) {

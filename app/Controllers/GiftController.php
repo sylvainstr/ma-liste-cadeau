@@ -55,6 +55,14 @@ class GiftController extends CoreController
    */
   public function edit($giftId)
   {
+
+    $gitRepo = new GiftRepository();
+    $gift = $gitRepo->findOne($giftId);
+    
+    if (!$gift) {
+      die('Le cadeau n\'existe pas');
+    }
+
     if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['shop']) && isset($_POST['url_image_product']) && isset($_POST['rank'])) {
       $urlProduct = $_POST['url_product'];
       $name = $_POST['name'];
@@ -63,24 +71,16 @@ class GiftController extends CoreController
       $urlImgProduct = $_POST['url_image_product'];
       $rank = $_POST['rank'];
 
-      $userId = $_SESSION['user']['id'];
-
       try {
-        $gitRepo = new GiftRepository();
-        $gift = $gitRepo->findOne($giftId);
-
-        if (!$gift) {
-          die('Le cadeau n\'existe pas');
-        }
 
         $gift->setUrlProduct($urlProduct);
         $gift->setName($name);
         $gift->setPrice($price);
         $gift->setShop($shop);
-        $gift->setUrlImgProduct($urlImgProduct);
+        $gift->setUrlImageProduct($urlImgProduct);
         $gift->setRank($rank);
         
-        $gitRepo->save($gift);
+        $gitRepo->edit($gift);
 
       } catch (\Exception $exception) {
         var_dump($exception->getMessage());
@@ -94,11 +94,10 @@ class GiftController extends CoreController
       exit;
     }
 
-    $gift = new GiftRepository();
-    $giftById = $gift->findOne($giftId);
+  
 
     $this->render('gift/edit', [
-      'gift_edit' => $giftById
+      'gift_edit' => $gift
     ]);
   }
 
