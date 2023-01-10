@@ -3,8 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Friends;
-use App\Models\Event;
-use App\Models\User;
+use App\Repository\FriendsRepository;
 use App\Repository\UserRepository;
 use App\Utils\Config;
 use App\Utils\FlashMessage;
@@ -29,33 +28,34 @@ class FriendsController extends CoreController
         die("Ce n'est pas un email");
       }
 
+      // je récupére l'utilisateur corrrespondant à l'email
       $userRepo = new UserRepository();
       $newFriend = $userRepo->findByEmail($email);
-      
-      $alreadyFriend = new UserRepository();
-      $alreadyFriend = $alreadyFriend->searchUserFriends($email);
+
+      $friendId = $newFriend->getId();
+      $alreadyFriend = new FriendsRepository();
+      $alreadyFriend = $alreadyFriend->searchUserFriends($friendId);
 
       // si l'utilisateur n'existe pas en BDD
       if (!$newFriend) {
-        FlashMessage::create_flash_message('error', 'Cette utilisateur n\'existe pas', 'FLASH_ERROR');
-        die("Cette utilisateur n'existe pas");
+        FlashMessage::create_flash_message('error', 'Cet utilisateur n\'existe pas', 'FLASH_ERROR');
+        die("Cet utilisateur n'existe pas");
       }
       // L'utilisateur ne peut pas se partager sa propre liste
       elseif ($email == $_SESSION["user"]['email']) {
-        FlashMessage::create_flash_message('error', 'Vous avez déjà accés à cette liste', 'FLASH_ERROR');
-        die("Vous avez déjà accés à cette liste");
+        FlashMessage::create_flash_message('error', 'Vous ne pouvez pas vous ajouter vous même en ami', 'FLASH_ERROR');
+        die('Vous ne pouvez pas vous ajouter vous même en ami');
       }
       // si l'utilisateur existe déjà en BDD
       elseif ($alreadyFriend) {
-        FlashMessage::create_flash_message('error', 'Cette utilisateur a déjà accés à cette liste', 'FLASH_ERROR');
-        die("Cette utilisateur a déjà accés à cette liste");
+        FlashMessage::create_flash_message('error', 'Cet utilisateur fait déjà parti de vos amis', 'FLASH_ERROR');
+        die('Cet utilisateur fait déjà parti de vos amis');
       }
 
-      $friendId = $newFriend->getId();
-      $friend = new Friends();
-      $friend = $friend->inviteFriend($friendId);
+      $friend = new FriendsRepository();
+      $friend = $friend->addFriend($friendId);
 
-      FlashMessage::create_flash_message('list_add_success', 'L\'utilisateur ami a été ajoutée à votre liste', 'FLASH_SUCCESS');
+      FlashMessage::create_flash_message('list_add_success', 'Votre ami a été ajouté', 'FLASH_SUCCESS');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
@@ -63,7 +63,7 @@ class FriendsController extends CoreController
       exit;
     }
 
-    $this->render('list/invit-friend');
+    $this->render('friends/invit-friend');
   }
 
   /**
@@ -71,15 +71,15 @@ class FriendsController extends CoreController
    *
    * @return void
    */
-  public function browse($idEvent)
+  public function browse()
   {
 
-    $friends = new Friends();
-    $friends = $friends->findShareEvents($idEvent);
+    $friends = new FriendsRepository();
+    $userId = $_SESSION['user']['id'];
+    $friends = $friends->findFriendsByUserId($userId);
 
-    $this->render('event/friends', [
-      'friends' => $friends,
-      'event_id' => $idEvent
+    $this->render('friends/list', [
+      'friends' => $friends
     ]);
   }
 
@@ -87,39 +87,20 @@ class FriendsController extends CoreController
   /**
    * Supprime un utilisateur de la liste
    *
-   * @param int $idList : id de la liste
-   * @param int $idList : id de l'utilisateur
+   * @param int $userId : id de l'utilisateur
    * @return void
    */
-  public function deleteFriend($idList, $idFriend)
+  public function deleteFriend($userId)
   {
-    $deleteFriend = new Friends();
-    $deleteFriend = $deleteFriend->deleteFriend($idFriend);
+    $deleteFriend = new FriendsRepository();
+    $deleteFriend = $deleteFriend->deleteFriend($userId);
 
     FlashMessage::create_flash_message('list_add_success', 'L\' utilisateur a été supprimé de votre liste', 'FLASH_SUCCESS');
 
     $config = Config::getInstance();
     $absoluteUrl =  $config['ABSOLUTE_URL'];
-    header("Location: $absoluteUrl" . "liste/" . $idList);
+    header("Location: $absoluteUrl" . "liste");
     exit;
   }
 
-  /**
-   * Supprime tout les utilisateurs de la liste
-   *
-   * @param int $idList : id de la liste
-   * @return void
-   */
-  public function deleteAllFriends($idList)
-  {
-    $deleteFriends = new Friends();
-    $deleteFriends = $deleteFriends->deleteAllFriends($idList);
-
-    FlashMessage::create_flash_message('list_add_success', 'Les utilisateurs ont été supprimé de votre liste', 'FLASH_SUCCESS');
-
-    $config = Config::getInstance();
-    $absoluteUrl =  $config['ABSOLUTE_URL'];
-    header("Location: $absoluteUrl" . "liste/" . $idList);
-    exit;
-  }
 }

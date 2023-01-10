@@ -52,23 +52,4 @@ class UserRepository
 
     return $user;
   }
-
-  /**
-   * Affiche l'utilisateur correspondant à l'email de la table friends
-   *
-   * @param [string] $email : email de l'utilisateur
-   * @return void
-   */
-  public function searchUserFriends($email)
-  {
-    $sql = "
-          SELECT * FROM friends
-          WHERE friend_id = '$email'        
-      ";
-
-    $pdoStatement = $this->pdo->query($sql);
-    $result = $pdoStatement->fetchObject(User::class);
-
-    return $result;
-  }
 }

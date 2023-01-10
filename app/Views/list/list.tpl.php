@@ -1,6 +1,4 @@
-  <div class="lists">
-
-    <a href="<?= $absoluteUrl ?>liste/inviter/amis">Invitez des amis à ma liste</a>
+  <div class="lists">   
 
     <a href="<?= $absoluteUrl ?>liste/cadeau/ajouter">Ajouter un cadeau</a>
 

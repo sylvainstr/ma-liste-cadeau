@@ -85,8 +85,8 @@ class GiftRepository
    */
   public function save($gift)
   {
-    if ($gift->getRank() !== null) {
-      $fields['rank'] = $gift->getRank();
+    if (empty($gift->getRank())) {
+       $gift->setRank(3);
     }
 
     $sql = "

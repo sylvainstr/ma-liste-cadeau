@@ -25,25 +25,23 @@ $router->post('/liste/cadeau/modifier/:giftid', "Gift#edit");
 // je supprime un cadeau à ma liste
 $router->get('/liste/cadeau/supprimer/:giftid', "Gift#delete");
 
-// j'invite une utilisateur à ma liste d'amis
-$router->get('/liste/inviter/amis', "Friends#invit");
-$router->post('/liste/inviter/amis', "Friends#invit");
+// je consulte mes amis
+$router->get('/amis', "Friends#browse");
+
+// j'ajoute une utilisateur à ma liste d'amis
+$router->get('/amis/invitation', "Friends#invit");
+$router->post('/amis/invitation', "Friends#invit");
+
+// je supprime un utilisateur de mon événement
+$router->get('/amis/supprimer/:friendid', "Friends#deleteFriend");
 
 // je consulte mon événement
 $router->get('/evenement/:id', "Event#read");
-
-// je consulte les utilisateurs d'un événement
-$router->get('/evenement/:id/amis', "Friends#browse");
 
 // j'invite une utilisateur à mon événement
 $router->get('/evenement/:id/inviter/amis', "Friends#addFriend");
 $router->post('/evenement/:id/inviter/amis', "Friends#addFriend");
 
-// je supprime un utilisateur de mon événement
-$router->get('/evenement/:id/amis/:id/supprimer', "Friends#deleteFriend");
-
-// je supprime tout les utilisateurs de mon événement
-$router->get('/evenement/:id/amis/supprimer', "Friends#deleteAllFriends");
 
 // j'accéde au formulaire d'inscription
 $router->get('/inscription', "User#register");
