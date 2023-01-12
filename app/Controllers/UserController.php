@@ -35,7 +35,9 @@ class UserController extends CoreController
         $email = $_POST['email'];
         if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
           FlashMessage::create_flash_message('error', "L'adresse email est incompléte", 'FLASH_ERROR');
-          die("L'adresse email est incompléte");
+          $config = Config::getInstance();
+          $absoluteUrl =  $config['ABSOLUTE_URL'];
+          header("Location: $absoluteUrl" . "inscription");
         }
 
         // On va hasher le mot de passe
@@ -71,7 +73,10 @@ class UserController extends CoreController
         header("Location: $absoluteUrl");
         exit;
       } else {
-        die("Le formulaire est incomplet");
+        FlashMessage::create_flash_message('error', "Le formulaire est incomplet", 'FLASH_ERROR');
+        $config = Config::getInstance();
+        $absoluteUrl =  $config['ABSOLUTE_URL'];
+        header("Location: $absoluteUrl" . "inscription");
       }
     }
 
@@ -102,7 +107,9 @@ class UserController extends CoreController
         // On vérifie que c'est bien un email
         if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
           FlashMessage::create_flash_message('error', "Ce n'est pas un email", 'FLASH_ERROR');
-          die("Ce n'est pas un email");
+          $config = Config::getInstance();
+          $absoluteUrl =  $config['ABSOLUTE_URL'];
+          header("Location: $absoluteUrl" . "connexion");
         }
 
         $email = $_POST['email'];
@@ -112,13 +119,17 @@ class UserController extends CoreController
           $user = $userRepo->findByEmail($email);
           if (!$user) {
             FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
-            die("L'utilisateur et/ou le mot de passe est incorrect");
+            $config = Config::getInstance();
+            $absoluteUrl =  $config['ABSOLUTE_URL'];
+            header("Location: $absoluteUrl" . "connexion");
           }
 
           // Ici on a un user existant, on peut vérifier le mot de passe
           if (!password_verify($_POST["password"], $user->getPassword())) {
             FlashMessage::create_flash_message('error', "L'utilisateur et/ou le mot de passe est incorrect", 'FLASH_ERROR');
-            die("L'utilisateur et/ou le mot de passe est incorrect");
+            $config = Config::getInstance();
+            $absoluteUrl =  $config['ABSOLUTE_URL'];
+            header("Location: $absoluteUrl" . "connexion");
           }
           // Ici l'utilisateur et le mot de passe son corrects
           // On va pouvoir "connecter" l'utilisateur       

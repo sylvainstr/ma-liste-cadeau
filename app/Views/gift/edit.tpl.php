@@ -1,4 +1,4 @@
-<a href="<?= $absoluteUrl ?>liste">Retour</a>
+<a href="<?= $absoluteUrl ?>cadeaux">Retour</a>
 
 <h3>Modification d'un cadeau</h3>
   <form action="" method="post">
@@ -35,6 +35,6 @@
 
   <div class="edit-gift-button">
     <button type="submit" name="submit">Modifier</button>
-    <a href="<?= $absoluteUrl ?>liste/cadeau/supprimer/<?= $gift_edit->getId(); ?>">Supprimer la liste</a>
+    <a href="<?= $absoluteUrl ?>cadeaux/supprimer/<?= $gift_edit->getId(); ?>">Supprimer le cadeau</a>
   </div>
   </form>

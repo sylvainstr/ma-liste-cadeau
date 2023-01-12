@@ -1,8 +1,8 @@
-<a href="<?= $absoluteUrl ?>liste">Retour</a>
+<a href="<?= $absoluteUrl ?>cadeaux">Retour</a>
 
 <h3>Ajout d'un cadeau</h3>
 
-  <form action="<?= $absoluteUrl ?>liste/cadeau/ajouter" method="post">
+  <form action="<?= $absoluteUrl ?>cadeaux/ajouter" method="post">
   
   <div class="add-gift-group">
 

@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\Friends;
 use App\Repository\FriendsRepository;
 use App\Repository\UserRepository;
 use App\Utils\Config;
@@ -14,7 +13,6 @@ class FriendsController extends CoreController
   /**
    * invite un utilisateur à ma liste d'amis
    *
-   * @param [int] $idList : identifiant de l'événement
    * @return void
    */
   public function invit()
@@ -25,31 +23,42 @@ class FriendsController extends CoreController
 
       if (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
         FlashMessage::create_flash_message('error', "Ce n'est pas un email", 'FLASH_ERROR');
-        die("Ce n'est pas un email");
+        $config = Config::getInstance();
+        $absoluteUrl =  $config['ABSOLUTE_URL'];
+        header("Location: $absoluteUrl" . "amis/invitation");
       }
 
-      // je récupére l'utilisateur corrrespondant à l'email
+      // je récupére l'utilisateur correspondant à l'email
       $userRepo = new UserRepository();
       $newFriend = $userRepo->findByEmail($email);
+           
+      // si l'utilisateur n'existe pas en BDD
+      if (!$newFriend) {
+        FlashMessage::create_flash_message('error', 'Cet utilisateur n\'existe pas', 'FLASH_ERROR');
+        $config = Config::getInstance();
+        $absoluteUrl =  $config['ABSOLUTE_URL'];
+        header("Location: $absoluteUrl" . "amis/invitation");
+      }
+      // L'utilisateur ne peut pas se partager sa propre liste
+      elseif ($email == $_SESSION["user"]['email']) {
+        FlashMessage::create_flash_message('error', 'Vous ne pouvez pas vous ajouter vous même en ami', 'FLASH_ERROR');
+        $config = Config::getInstance();
+        $absoluteUrl =  $config['ABSOLUTE_URL'];
+        header("Location: $absoluteUrl" . "amis/invitation");
+        exit;
+      }
 
       $friendId = $newFriend->getId();
       $alreadyFriend = new FriendsRepository();
       $alreadyFriend = $alreadyFriend->searchUserFriends($friendId);
 
-      // si l'utilisateur n'existe pas en BDD
-      if (!$newFriend) {
-        FlashMessage::create_flash_message('error', 'Cet utilisateur n\'existe pas', 'FLASH_ERROR');
-        die("Cet utilisateur n'existe pas");
-      }
-      // L'utilisateur ne peut pas se partager sa propre liste
-      elseif ($email == $_SESSION["user"]['email']) {
-        FlashMessage::create_flash_message('error', 'Vous ne pouvez pas vous ajouter vous même en ami', 'FLASH_ERROR');
-        die('Vous ne pouvez pas vous ajouter vous même en ami');
-      }
       // si l'utilisateur existe déjà en BDD
-      elseif ($alreadyFriend) {
+      if (!$alreadyFriend) {
         FlashMessage::create_flash_message('error', 'Cet utilisateur fait déjà parti de vos amis', 'FLASH_ERROR');
-        die('Cet utilisateur fait déjà parti de vos amis');
+        $config = Config::getInstance();
+        $absoluteUrl =  $config['ABSOLUTE_URL'];
+        header("Location: $absoluteUrl" . "amis/invitation");
+        exit;
       }
 
       $friend = new FriendsRepository();
@@ -59,7 +68,7 @@ class FriendsController extends CoreController
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
-      header("Location: $absoluteUrl" . "liste");
+      header("Location: $absoluteUrl" . "amis");
       exit;
     }
 
@@ -95,11 +104,11 @@ class FriendsController extends CoreController
     $deleteFriend = new FriendsRepository();
     $deleteFriend = $deleteFriend->deleteFriend($userId);
 
-    FlashMessage::create_flash_message('list_add_success', 'L\' utilisateur a été supprimé de votre liste', 'FLASH_SUCCESS');
+    FlashMessage::create_flash_message('list_add_success', 'L\' utilisateur a été supprimé de vos amis', 'FLASH_SUCCESS');
 
     $config = Config::getInstance();
     $absoluteUrl =  $config['ABSOLUTE_URL'];
-    header("Location: $absoluteUrl" . "liste");
+    header("Location: $absoluteUrl" . "amis");
     exit;
   }
 

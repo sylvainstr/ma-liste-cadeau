@@ -1,10 +1,6 @@
   <div class="lists">   
 
-    <a href="<?= $absoluteUrl ?>liste/cadeau/ajouter">Ajouter un cadeau</a>
-
-    <?php if (!empty($friends)) : ?>
-      <a href="<?= $absoluteUrl ?>liste/amis">Voir ma liste d'amis</a>
-    <?php endif; ?>
+    <a href="<?= $absoluteUrl ?>cadeaux/ajouter">Ajouter un cadeau</a>
 
     <h2>Ma liste de cadeaux</h2>
 
@@ -34,8 +30,8 @@
 
           <a href="#">J'offre ce cadeau</a>
 
-          <a href="<?= $absoluteUrl ?>liste/cadeau/modifier/<?= $gift->getId() ?>">Modifier le cadeau</a>
-          <a href="<?= $absoluteUrl ?>liste/cadeau/supprimer/<?= $gift->getId() ?>">Supprimer le cadeau</a>
+          <a href="<?= $absoluteUrl ?>cadeaux/modifier/<?= $gift->getId() ?>">Modifier le cadeau</a>
+          <a href="<?= $absoluteUrl ?>cadeaux/supprimer/<?= $gift->getId() ?>">Supprimer le cadeau</a>
 
         </div>
       <?php endforeach; ?>

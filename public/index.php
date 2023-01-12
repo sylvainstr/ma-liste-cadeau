@@ -11,19 +11,19 @@ $router = new Router($_GET['url']);
 
 $router->get('/', "Main#home");
 
-// je consulte mes listes de cadeaux
-$router->get('/liste', "List#browse");
+// je consulte ma liste de cadeaux
+$router->get('/cadeaux', "List#browse");
 
 // j'ajoute un cadeau à ma liste
-$router->get('/liste/cadeau/ajouter', "Gift#add");
-$router->post('/liste/cadeau/ajouter', "Gift#add");
+$router->get('/cadeaux/ajouter', "Gift#add");
+$router->post('/cadeaux/ajouter', "Gift#add");
 
 // je modifie un cadeau à ma liste
-$router->get('/liste/cadeau/modifier/:giftid', "Gift#edit");
-$router->post('/liste/cadeau/modifier/:giftid', "Gift#edit");
+$router->get('/cadeaux/modifier/:giftid', "Gift#edit");
+$router->post('/cadeaux/modifier/:giftid', "Gift#edit");
 
 // je supprime un cadeau à ma liste
-$router->get('/liste/cadeau/supprimer/:giftid', "Gift#delete");
+$router->get('/cadeaux/supprimer/:giftid', "Gift#delete");
 
 // je consulte mes amis
 $router->get('/amis', "Friends#browse");
