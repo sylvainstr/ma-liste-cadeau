@@ -11,6 +11,23 @@ class FriendsController extends CoreController
 {
 
   /**
+   * Renvoi les utilisateurs d'un événement
+   *
+   * @return void
+   */
+  public function browse()
+  {
+
+    $friends = new FriendsRepository();
+    $userId = $_SESSION['user']['id'];
+    $friends = $friends->findFriendsByUserId($userId);
+
+    $this->render('friends/list', [
+      'friends' => $friends
+    ]);
+  }
+
+  /**
    * invite un utilisateur à ma liste d'amis
    *
    * @return void
@@ -31,7 +48,7 @@ class FriendsController extends CoreController
       // je récupére l'utilisateur correspondant à l'email
       $userRepo = new UserRepository();
       $newFriend = $userRepo->findByEmail($email);
-           
+
       // si l'utilisateur n'existe pas en BDD
       if (!$newFriend) {
         FlashMessage::create_flash_message('error', 'Cet utilisateur n\'existe pas', 'FLASH_ERROR');
@@ -64,7 +81,7 @@ class FriendsController extends CoreController
       $friend = new FriendsRepository();
       $friend = $friend->addFriend($friendId);
 
-      FlashMessage::create_flash_message('list_add_success', 'Votre ami a été ajouté', 'FLASH_SUCCESS');
+      FlashMessage::create_flash_message('friend_add_success', 'Votre ami a été ajouté', 'FLASH_SUCCESS');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
@@ -75,22 +92,6 @@ class FriendsController extends CoreController
     $this->render('friends/invit-friend');
   }
 
-  /**
-   * Renvoi les utilisateurs d'un événement
-   *
-   * @return void
-   */
-  public function browse()
-  {
-
-    $friends = new FriendsRepository();
-    $userId = $_SESSION['user']['id'];
-    $friends = $friends->findFriendsByUserId($userId);
-
-    $this->render('friends/list', [
-      'friends' => $friends
-    ]);
-  }
 
 
   /**
@@ -104,12 +105,11 @@ class FriendsController extends CoreController
     $deleteFriend = new FriendsRepository();
     $deleteFriend = $deleteFriend->deleteFriend($userId);
 
-    FlashMessage::create_flash_message('list_add_success', 'L\' utilisateur a été supprimé de vos amis', 'FLASH_SUCCESS');
+    FlashMessage::create_flash_message('friend_add_success', 'L\' utilisateur a été supprimé de vos amis', 'FLASH_SUCCESS');
 
     $config = Config::getInstance();
     $absoluteUrl =  $config['ABSOLUTE_URL'];
     header("Location: $absoluteUrl" . "amis");
     exit;
   }
-
 }

@@ -1,40 +1,35 @@
-<a href="<?= $absoluteUrl ?>liste">Retour</a>
+<a href="<?= $absoluteUrl ?>evenements">Retour</a>
 
-<h3>Modification de la liste</h3>
+<h3>Modification d'une événement</h3>
 
 <form action="" method="post">
-  <div class="add-list-group">
-
-    <label for="event">Nom de l'événement:</label>
-    <select name="event" id="event">
-      <?php foreach (App\Models\Lists::$eventsType as $slug => $label) : ?>
-
-        <option value="<?php echo $slug ?>" <?php if ($slug == $list_edit->getEvent()) : ?>selected<?php endif; ?>><?php echo $label ?></option>
-
-      <?php endforeach; ?>
-    </select>
-
-    <div class="add-list-item-title">
-      <label for="title">Titre</label>
-      <input type="text" name="title" id="title" required="required" placeholder="Exemple : Liste de naissance" value="<?= $list_edit->getTitle() ?>">
+  <div class="edit-event-group">
+    <div class="edit-event-item">
+      <label for="name">Nom</label>
+      <input type="text" name="name" id="name" required="required" placeholder="Exemple : Liste de naissance" value="<?= $event_edit->getName() ?>">
     </div>
-    <div class="add-list-item-subtitle">
-      <label for="subtitle">Sous titre</label>
-      <input type="text" name="subtitle" id="subtitle" placeholder="Exemple : Arrivée prévue pour Juin 2023" value="<?= $list_edit->getSubtitle() ?>">
-    </div>
-    <div class="add-list-item-message">
-      <label for="message">Votre message</label>
-      <textarea name="message" id="message" required="required" placeholder="Tapez votre message...">
-      <?= $list_edit->getMessage() ?>
+    <div class="edit-event-item">
+      <label for="description">Votre message</label>
+      <textarea type="text" name="description" id="description" required="required" placeholder="Tapez votre description...">
+      <?= $event_edit->getDescription() ?>
       </textarea>
     </div>
+    <div class="edit-event-item">
+      <label for="target_user">Pour</label>
+      <input type="number" name="target_user" id="target_user" required="required" value="<?= $event_edit->getTargetUser() ?>">
+    </div>
+    <div class="edit-event-item">
+      <label for="created_by">Créé par</label>
+      <input type="number" name="created_by" id="created_by" required="required" value="<?= $event_edit->getCreatedBy() ?>">
+    </div>
+    <div class="edit-event-item">
+      <label for="end_at">Date de fin</label>
+      <input type="date" name="end_at" id="end_at" required="required" value="<?= $event_edit->getEndAt() ?>">
+    </div>
   </div>
 
-  <div class="add-list-button">
-
+  <div class="edit-event-button">
     <button type="submit" name="submit">Modifier</button>
-    <a href="<?= $absoluteUrl ?>liste/supprimer/<?= $list_edit->getId(); ?>">Supprimer la liste</a>
-
+    <a href="<?= $absoluteUrl ?>evenements/supprimer/<?= $event_edit->getId(); ?>">Supprimer le cadeau</a>
   </div>
-
 </form>

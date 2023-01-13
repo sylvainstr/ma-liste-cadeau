@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use PDO;
-use App\Models\Gift;
-use App\Utils\Database;
 use App\Models\CoreModel;
 
 class Event extends CoreModel
@@ -12,11 +9,18 @@ class Event extends CoreModel
 
   private $name;
   private $description;
-  private $targetUser;
-  private $createdAt;
-  private $createdBy;
-  private $updatedAt;
-  private $endAt;
+  private $target_user;
+  private $created_by;
+  private $end_at;
+
+  public function __construct($name, $description, $target_user, $created_by, $end_at)
+  {
+    $this->name = $name;
+    $this->description = $description;
+    $this->target_user = $target_user;
+    $this->created_by = $created_by;
+    $this->end_at = $end_at;
+  }
 
   /**
    * Get the value of name
@@ -63,7 +67,7 @@ class Event extends CoreModel
    */ 
   public function getTargetUser()
   {
-    return $this->targetUser;
+    return $this->target_user;
   }
 
   /**
@@ -71,257 +75,50 @@ class Event extends CoreModel
    *
    * @return  self
    */ 
-  public function setTargetUser($targetUser)
+  public function setTargetUser($target_user)
   {
-    $this->targetUser = $targetUser;
+    $this->target_user = $target_user;
 
     return $this;
   }
 
   /**
-   * Get the value of createdAt
-   */ 
-  public function getCreatedAt()
-  {
-    return $this->createdAt;
-  }
-
-  /**
-   * Set the value of createdAt
-   *
-   * @return  self
-   */ 
-  public function setCreatedAt($createdAt)
-  {
-    $this->createdAt = $createdAt;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of createdBy
+   * Get the value of created_by
    */ 
   public function getCreatedBy()
   {
-    return $this->createdBy;
+    return $this->created_by;
   }
 
   /**
-   * Set the value of createdBy
+   * Set the value of created_by
    *
    * @return  self
    */ 
-  public function setCreatedBy($createdBy)
+  public function setCreatedBy($created_by)
   {
-    $this->createdBy = $createdBy;
+    $this->created_by = $created_by;
 
     return $this;
   }
 
   /**
-   * Get the value of updatedAt
-   */ 
-  public function getUpdatedAt()
-  {
-    return $this->updatedAt;
-  }
-
-  /**
-   * Set the value of updatedAt
-   *
-   * @return  self
-   */ 
-  public function setUpdatedAt($updatedAt)
-  {
-    $this->updatedAt = $updatedAt;
-
-    return $this;
-  }
-
-  /**
-   * Get the value of endAt
+   * Get the value of end_at
    */ 
   public function getEndAt()
   {
-    return $this->endAt;
+    return $this->end_at;
   }
 
   /**
-   * Set the value of endAt
+   * Set the value of end_at
    *
    * @return  self
    */ 
-  public function setEndAt($endAt)
+  public function setEndAt($end_at)
   {
-    $this->endAt = $endAt;
+    $this->end_at = $end_at;
 
     return $this;
-  } 
-  
-  /**
-   * Affiche le(s) cadeau(x) d'une liste
-   *
-   * @return array
-   */
-  public function getGifts(): array
-  {
-    $sql = "
-    SELECT *
-    FROM gift
-    WHERE lists_id = " . $this->getId()
-    ;
-    
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Gift::class);
-    
-    return $result;
-  }
-  
-  /**
-   * Affiche toutes les listes
-   *
-   * @return array
-   */
-  public function findAll(): array
-  {
-    $sql = '
-    SELECT *
-    FROM lists
-    ';
-    
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Lists::class);
-    
-    return $result;
-  }
-  
-  /**
-   * affiche les lites d'un utilisateur
-   *
-   * @param [int] $idUser : identifiant de l'utilisateur
-   * @return array
-   */
-  public function findByUserId($idUser): array
-  {
-    $sql = "
-    SELECT *
-    FROM lists where user_id = '$idUser'
-    ";
-
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Lists::class);
-
-    return $result;
-  }
-
-    /**
-   * affiche les lites paratagées d'un utilisateur
-   *
-   * @param [int] $idList : identifiant de la liste
-   * @return Lists
-   */
-  public function getFriendList($idList): Lists
-  {
-    $sql = "
-    SELECT *
-    FROM lists where id = '$idList'
-    ";
-
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchObject(Lists::class);
-
-    return $result;
-  }
-
-  /**
-   * Affiche une liste
-   *
-   * @param [int] $idList : identifiant d'une liste
-   * @return Lists
-   */
-  public function findOne($idList): Lists
-  {
-    $sql = "
-          SELECT *
-          FROM lists where id = '$idList'
-      ";
-
-    $pdo = Database::getPDO();
-    $pdoStatement = $pdo->query($sql);
-    $result = $pdoStatement->fetchObject(Lists::class);
-
-    $verif = $pdoStatement->rowCount();
-    $badId = false;
-    if ($verif <= 0) {
-      $badId = true;
-    }
-
-    return $result;
-  }
-
-  /**
-   * Ajout d'une liste
-   *
-   * @param [string] $event : événement de la liste
-   * @param [string] $title : titre de la liste
-   * @param [string] $subtitle : soustitre de la liste
-   * @param [string] $message : message de la liste
-   * @return void
-   */
-  public function addList($event, $title, $subtitle, $message)
-  {
-    $sql = "
-          INSERT INTO lists (event, title, subtitle, message, user_id)
-          VALUES ('$event', '$title', '$subtitle', '$message', " . $_SESSION["user"]["id"] . ")
-      ";
-
-    $pdo = Database::getPDO();
-    $pdo->exec($sql);
-  }
-
-  /**
-   * Modification d'une liste
-   *
-   * @param [int] $idList : identifiant de la liste
-   * @param [string] $event : événement de la liste
-   * @param [string] $title : titre de la liste
-   * @param [string] $subtitle : soustitre de la liste
-   * @param [string] $message : message de la liste
-   * @return void
-   */
-  public function editList($idList, $event, $title, $subtitle, $message)
-  {
-    $sql = "
-          UPDATE lists set
-          event = '$event',
-          title = '$title',
-          subtitle = '$subtitle',
-          message = '$message',
-          updated_at = NOW()
-          where id = '$idList'
-      ";
-
-    $pdo = Database::getPDO();
-    $pdo->query($sql);
-  }
-
-  /**
-   * Suppression d'une liste
-   *
-   * @param [int] $idList : identifiant de la liste
-   * @return void
-   */
-  public function deleteList($idList)
-  {
-    $sql = "
-          DELETE from lists where id = '$idList'
-      ";
-
-    $pdo = Database::getPDO();
-    $pdo->query($sql);
   }
 }

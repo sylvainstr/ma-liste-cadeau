@@ -9,6 +9,33 @@ use App\Utils\FlashMessage;
 
 class GiftController extends CoreController
 {
+
+  /**
+   * Renvoi la liste de cadeaux par utilisateurs
+   *
+   * @return void
+   */
+  public function browse()
+  {
+
+    if (!isset($_SESSION["user"])) {
+      // si l'utilisateur n'est pas connecté on redirige vers la page d'acceuil
+      $config = Config::getInstance();
+      $absoluteUrl =  $config['ABSOLUTE_URL'];
+      header("Location: $absoluteUrl");
+      exit;
+    }
+
+    $userId = $_SESSION['user']['id'];
+
+    $giftRepo = new GiftRepository();
+    $gifts = $giftRepo->findByUserId($userId);
+
+    $this->render('gift/list', [
+      'gifts' => $gifts
+    ]);
+  }
+
   /**
    * Ajouter un cadeau
    *
@@ -33,10 +60,10 @@ class GiftController extends CoreController
         $gitRepo = new GiftRepository();
         $gitRepo->save($newGift);
       } catch (\Exception $exception) {
-        var_dump($exception->getMessage());        
+        var_dump($exception->getMessage());
       }
 
-      FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été ajoutée', 'FLASH_SUCCESS');
+      FlashMessage::create_flash_message('gift_add_success', 'Votre cadeau a été ajoutée', 'FLASH_SUCCESS');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
@@ -58,9 +85,14 @@ class GiftController extends CoreController
 
     $gitRepo = new GiftRepository();
     $gift = $gitRepo->findOne($giftId);
-    
+
     if (!$gift) {
-      die('Le cadeau n\'existe pas');
+      FlashMessage::create_flash_message('error', 'Le cadeau n\'existe pas', 'FLASH_ERROR');
+      
+      $config = Config::getInstance();
+      $absoluteUrl =  $config['ABSOLUTE_URL'];
+      header("Location: $absoluteUrl" . "cadeaux");
+      exit;
     }
 
     if (isset($_POST['url_product']) && isset($_POST['name']) && isset($_POST['price']) && isset($_POST['shop']) && isset($_POST['url_image_product']) && isset($_POST['rank'])) {
@@ -79,22 +111,19 @@ class GiftController extends CoreController
         $gift->setShop($shop);
         $gift->setUrlImageProduct($urlImgProduct);
         $gift->setRank($rank);
-        
-        $gitRepo->edit($gift);
 
+        $gitRepo->edit($gift);
       } catch (\Exception $exception) {
         var_dump($exception->getMessage());
       }
 
-      FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été modifié', 'FLASH_SUCCESS');
+      FlashMessage::create_flash_message('gift_add_success', 'Votre cadeau a été modifié', 'FLASH_SUCCESS');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
       header("Location: $absoluteUrl" . "cadeaux");
       exit;
     }
-
-  
 
     $this->render('gift/edit', [
       'gift_edit' => $gift
@@ -112,7 +141,7 @@ class GiftController extends CoreController
     $deleteGift = new GiftRepository();
     $deleteGift = $deleteGift->delete($giftId);
 
-    FlashMessage::create_flash_message('list_add_success', 'Votre cadeau a été supprimé', 'FLASH_SUCCESS');
+    FlashMessage::create_flash_message('gift_add_success', 'Votre cadeau a été supprimé', 'FLASH_SUCCESS');
 
     $config = Config::getInstance();
     $absoluteUrl =  $config['ABSOLUTE_URL'];

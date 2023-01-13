@@ -19,7 +19,7 @@
       <a href="<?= $absoluteUrl ?>connexion">Se connecter</a>
       <a href="<?= $absoluteUrl ?>inscription">S'inscrire</a>
     <?php else : ?>
-      <a href="<?= $absoluteUrl ?>evenement">Mes événements</a>
+      <a href="<?= $absoluteUrl ?>evenements">Mes événements</a>
       <a href="<?= $absoluteUrl ?>cadeaux">Mes cadeaux</a>
       <a href="<?= $absoluteUrl ?>amis">Mes amis</a>
       <a href="<?= $absoluteUrl ?>deconnexion">Se Déconnecter</a>

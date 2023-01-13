@@ -2,70 +2,60 @@
 
 namespace App\Controllers;
 
-use App\Models\Friends;
 use App\Models\Event;
+use App\Repository\EventRepository;
 use App\Utils\Config;
 use App\Utils\FlashMessage;
 
 class EventController extends CoreController
 {
   /**
-   * Renvoi les listes par utilisateurs
+   * Renvoi les événements par utilisateurs
    *
    * @return void
    */
   public function browse()
   {
-    $userId = $_SESSION['user']['id'];
-
-    $lists = new Event();
-    $lists = $lists->findByUserId($userId);
-
-    $friend = new Friends();
-    $shareLists = $friend->findShareLists($userId);
-
-    $friendList = new Event();
-
-    $arrayList = [];
-
-    foreach ($shareLists as $shareList) {
-      $arrayList[]= $friendList->getFriendList($shareList->getListsId());
+    if (!isset($_SESSION["user"])) {
+      // si l'utilisateur n'est pas connecté on redirige vers la page d'acceuil
+      $config = Config::getInstance();
+      $absoluteUrl =  $config['ABSOLUTE_URL'];
+      header("Location: $absoluteUrl");
+      exit;
     }
 
-    $this->render('list/list', [
-      'lists' => $lists,
-      'friend_lists' => $arrayList
+    $userId = $_SESSION['user']['id'];
+
+    $eventRepo = new EventRepository();
+    $events = $eventRepo->findByUserId($userId);
+
+    $this->render('event/list', [
+      'events' => $events
     ]);
   }
 
   /**
-   * Consultation de la liste par l'id
-   *
-   * @param int $idList : id de la liste
+   * Consulter un événement
+   * 
+   * @param int $eventId : id de la liste
    * @return void
    */
-  public function read($idList)
+  public function read($eventId)
   {
-    $friends = new Friends();
-    $friends = $friends->findShareLists($idList);
-
-    $lists = new Event();
-    $listById = $lists->findOne($idList);
+    $eventRepo = new EventRepository();
+    $eventById = $eventRepo->findOne($eventId);
 
     // l'id n'existe pas
-    if (empty($listById)) {
+    if (empty($eventById)) {
       $errorController = new ErrorController();
       return $errorController->notFound();
     }
 
-    $gifts = $listById->getGifts();
-
-    $this->render('list/read', [
-      'list_read' => $listById,
-      'gifts' => $gifts,
-      'friends' => $friends
+    $this->render('event/read', [
+      'event_read' => $eventById
     ]);
   }
+
 
   /**
    * Ajouter une liste
@@ -74,75 +64,100 @@ class EventController extends CoreController
    */
   public function add()
   {
-    if (isset($_POST['event']) && isset($_POST['title']) && isset($_POST['message'])) {
-      $event = $_POST['event'];
-      $title = $_POST['title'];
-      $subtitle = $_POST['subtitle'];
-      $message = $_POST['message'];
+    if (isset($_POST['name']) && isset($_POST['description']) && isset($_POST['target_user']) && isset($_POST['created_by']) && isset($_POST['end_at'])) {
+      $name = $_POST['name'];
+      $description = $_POST['description'];
+      $targetUser = $_POST['target_user'];
+      $createdBy = $_POST['created_by'];
+      $endAt = $_POST['end_at'];
 
-      $newList = new Event();
-      $newList = $newList->addList($event, $title, $subtitle, $message);
+      try {
+        $newEvent = new Event($name, $description, $targetUser, $createdBy, $endAt);
+        $eventRepo = new EventRepository();
+        $eventRepo->save($newEvent);
+      } catch (\Exception $exception) {
+        var_dump($exception->getMessage());
+      }
 
-      FlashMessage::create_flash_message('list_add_success', 'Votre liste a été ajoutée', 'FLASH_SUCCESS');
+      FlashMessage::create_flash_message('event_add_success', 'Votre événement a été ajouté', 'FLASH_SUCCESS');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
-      header("Location: $absoluteUrl");
+      header("Location: $absoluteUrl" . "evenements");
       exit;
     }
 
-    $this->render('list/add');
+    $this->render('event/add');
   }
 
   /**
    * Modifier une liste
    *
-   * @param int $idList : id de la liste
+   * @param int $eventId : id de la liste
    * @return void
    */
-  public function edit($idList)
+  public function edit($eventId)
   {
-    if (isset($_POST['event']) && isset($_POST['title']) && isset($_POST['message'])) {
-      $event = $_POST['event'];
-      $title = $_POST['title'];
-      $subtitle = $_POST['subtitle'];
-      $message = $_POST['message'];
+    $eventRepo = new EventRepository();
+    $event = $eventRepo->findOne($eventId);
 
-      $editList = new Event();
-      $editList = $editList->editList($idList, $event, $title, $subtitle, $message);
-
-      FlashMessage::create_flash_message('list_add_success', 'Votre liste a été modifiée', 'FLASH_SUCCESS');
+    if (!$event) {
+      FlashMessage::create_flash_message('error', 'L\'événement n\'existe pas', 'FLASH_ERROR');
 
       $config = Config::getInstance();
       $absoluteUrl =  $config['ABSOLUTE_URL'];
-      header("Location: $absoluteUrl");
+      header("Location: $absoluteUrl" . "evenements");
       exit;
     }
 
-    $list = new Event();
-    $listById = $list->findOne($idList);
+    if (isset($_POST['name']) && isset($_POST['description']) && isset($_POST['target_user']) && isset($_POST['created_by']) && isset($_POST['end_at'])) {
+      $name = $_POST['name'];
+      $description = $_POST['description'];
+      $targetUser = $_POST['target_user'];
+      $createdBy = $_POST['created_by'];
+      $endAt = $_POST['end_at'];
 
-    $this->render('list/edit', [
-      'list_edit' => $listById
+      try {
+        $event->setName($name);
+        $event->setDescription($description);
+        $event->setTargetUser($targetUser);
+        $event->setCreatedBy($createdBy);
+        $event->setEndAt($endAt);
+
+        $eventRepo->edit($event);
+      } catch (\Exception $exception) {
+        var_dump($exception->getMessage());
+      }
+
+      FlashMessage::create_flash_message('event_edit_success', 'Votre événement a été modifié', 'FLASH_SUCCESS');
+
+      $config = Config::getInstance();
+      $absoluteUrl =  $config['ABSOLUTE_URL'];
+      header("Location: $absoluteUrl" . "evenements");
+      exit;
+    }
+
+    $this->render('event/edit', [
+      'event_edit' => $event
     ]);
   }
 
   /**
-   * Supprimer une liste
+   * Supprimer un événement
    *
-   * @param int $idList : id de la liste
+   * @param int $eventId : id de l'événement
    * @return void
    */
-  public function delete($idList)
+  public function delete($eventId)
   {
-    $deleteList = new Event();
-    $deleteList = $deleteList->deleteList($idList);
+    $deleteEvent = new EventRepository();
+    $deleteEvent = $deleteEvent->delete($eventId);
 
-    FlashMessage::create_flash_message('list_add_success', 'Votre liste a été supprimée', 'FLASH_SUCCESS');
+    FlashMessage::create_flash_message('event_add_success', 'Votre événement a été supprimée', 'FLASH_SUCCESS');
 
     $config = Config::getInstance();
     $absoluteUrl =  $config['ABSOLUTE_URL'];
-    header("Location: $absoluteUrl");
+    header("Location: $absoluteUrl" . "evenements");
     exit;
   }
 }

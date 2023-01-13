@@ -1,10 +1,10 @@
 <a href="<?= $absoluteUrl ?>cadeaux">Retour</a>
 
 <h3>Modification d'un cadeau</h3>
-  <form action="" method="post">
+<form action="" method="post">
 
   <div class="edit-gift-group">
-  
+
     <div class="edit-gift-item-url_product">
       <label for="url_product">Lien du cadeau</label>
       <input type="url" name="url_product" id="url_product" required="required" placeholder="https://www.mon-site-de-jouet.com" value="<?= $gift_edit->getUrlProduct() ?>">
@@ -37,4 +37,4 @@
     <button type="submit" name="submit">Modifier</button>
     <a href="<?= $absoluteUrl ?>cadeaux/supprimer/<?= $gift_edit->getId(); ?>">Supprimer le cadeau</a>
   </div>
-  </form>
+</form>

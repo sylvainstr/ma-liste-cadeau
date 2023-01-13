@@ -1,22 +1,14 @@
-<?php $id = $list_read->getId(); ?>
+<?php $id = $event_read->getId(); ?>
 
-<a href="<?= $absoluteUrl ?>liste">Retour</a>
+<a href="<?= $absoluteUrl ?>evenements">Retour</a>
+
+<h2><?= ucfirst($event_read->getName()) ?></h2>
+<h3><?= $event_read->getTargetUser() ?></h3>
+<h3><?= $event_read->getCreatedBy() ?></h3>
+<h3><?= $event_read->getEndAt() ?></h3>
 
 
-<a href="<?= $absoluteUrl ?>liste/<?= $id ?>/inviter/amis">Invitez des amis à ma liste</a>
-
-<?php if (!empty($friends)) : ?>
-  <a href="<?= $absoluteUrl ?>liste/<?= $id ?>/amis">Voir ma liste d'amis</a>
-<?php endif; ?>
-
-<h2><?= ucfirst($list_read->getEvent()) ?></h2>
-<h3><?= $list_read->getTitle() ?></h3>
-<h3><?= $list_read->getSubtitle() ?></h3>
-<h3><?= $list_read->getMessage() ?></h3>
-
-<a href="<?= $absoluteUrl ?>liste/<?= $id ?>/cadeau/ajouter">Ajouter un cadeau</a>
-
-<h2>Mes cadeaux</h2>
+<h2>Liste des cadeaux</h2>
 
 <div class="gift-group">
   <?php foreach ($gifts as $gift) : ?>

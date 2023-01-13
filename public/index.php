@@ -12,7 +12,7 @@ $router = new Router($_GET['url']);
 $router->get('/', "Main#home");
 
 // je consulte ma liste de cadeaux
-$router->get('/cadeaux', "List#browse");
+$router->get('/cadeaux', "Gift#browse");
 
 // j'ajoute un cadeau à ma liste
 $router->get('/cadeaux/ajouter', "Gift#add");
@@ -35,13 +35,27 @@ $router->post('/amis/invitation', "Friends#invit");
 // je supprime un utilisateur de mon événement
 $router->get('/amis/supprimer/:friendid', "Friends#deleteFriend");
 
+// j'affiche mes événements
+$router->get('/evenements', "Event#browse");
+
+
+// j'ajoute un événement
+$router->get('/evenements/ajouter', "Event#add");
+$router->post('/evenements/ajouter', "Event#add");
+
+// je modifie un événement
+$router->get('/evenements/modifier/:eventid', "Event#edit");
+$router->post('/evenements/modifier/:eventid', "Event#edit");
+
+// je supprime un événement
+$router->get('/evenements/supprimer/:eventid', "Event#delete");
+
 // je consulte mon événement
-$router->get('/evenement/:id', "Event#read");
+$router->get('/evenements/:eventid', "Event#read");
 
-// j'invite une utilisateur à mon événement
-$router->get('/evenement/:id/inviter/amis', "Friends#addFriend");
-$router->post('/evenement/:id/inviter/amis', "Friends#addFriend");
-
+// j'ajoute un ami à un événement
+$router->get('/evenements/:eventid/inviter/amis', "Event#addFriend");
+$router->post('/evenements/:eventid/inviter/amis', "Event#addFriend");
 
 // j'accéde au formulaire d'inscription
 $router->get('/inscription', "User#register");

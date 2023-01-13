@@ -59,14 +59,14 @@ class GiftRepository
   /**
    * Affiche un cadeau
    *
-   * @param [int] $idGift : identifiant d'un cadeau
+   * @param [int] $GiftId : identifiant d'un cadeau
    * @return void
    */
-  public function findOne($idGift)
+  public function findOne($GiftId)
   {
     $sql = "
           SELECT *
-          FROM gift where id = '$idGift'
+          FROM gift where id = '$GiftId'
       ";
 
 
@@ -78,7 +78,7 @@ class GiftRepository
   }
 
   /**
-   * Ajoute un cadeau
+   * Ajout d'un cadeau
    *
    * @param [string] $gift : différents champs du cadeau
    * @return void
@@ -162,6 +162,7 @@ class GiftRepository
     $pdoStatement->bindValue('id', $gift->getId());
 
     $result = $pdoStatement->execute();
+    
     if (!$result) {
       throw new Exception($this->pdo->getMessage());
     }
