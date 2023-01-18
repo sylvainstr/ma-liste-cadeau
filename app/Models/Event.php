@@ -6,7 +6,6 @@ use App\Models\CoreModel;
 
 class Event extends CoreModel
 {
-
   private $name;
   private $description;
   private $target_user;

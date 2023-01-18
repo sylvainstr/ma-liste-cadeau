@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="<?= $absoluteUrl ?>/assets/css/style.css">
 
+  <!-- JS -->
+  <script src="<?= $absoluteUrl ?>assets/js/script.js" defer='true'></script>
+
   <title>Ma liste de cadeaux</title>
 </head>
 

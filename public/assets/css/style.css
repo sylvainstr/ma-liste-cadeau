@@ -86,3 +86,10 @@ footer {
   background-color: rgb(214, 65, 65);
   min-height: 82px; 
 }
+
+.add-friend-event {
+  border: solid;
+  border-radius: 15px;
+  padding: 1rem;
+  width: 300px;
+}

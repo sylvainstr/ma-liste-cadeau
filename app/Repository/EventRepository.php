@@ -38,7 +38,7 @@ class EventRepository
   }
 
   /**
-   * Affiche un événement
+   * Trouve un événement
    *
    * @param [int] $eventId : identifiant d'un événement
    * @return void
@@ -58,7 +58,37 @@ class EventRepository
   }
 
   /**
-   * Ajout d'une événement
+   * ajoute les amis à un événement
+   * @param Event $event : représente les informations un événement
+   * @param User $user : représente les informations un utilisateur
+   * @return void
+   */
+  public function addFriend($event, $user)
+  {
+    $sql = "
+    INSERT INTO user_event (
+      user_id,
+      event_id
+      )
+    VALUES (
+      :user_id,
+      :event_id
+      )
+    ";
+
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('user_id', $user->getId());
+    $pdoStatement->bindValue('event_id', $event->getId());
+
+    $result = $pdoStatement->execute();
+    if (!$result) {
+      throw new Exception($this->pdo->getMessage());
+    }
+  }
+
+
+  /**
+   * Enregistre un événement
    *
    * @param [string] $event : différents champs du cadeau
    * @return void
@@ -97,6 +127,8 @@ class EventRepository
     if (!$result) {
       throw new Exception($this->pdo->getMessage());
     }
+
+    return $this->pdo->lastInsertId();
   }
 
   /**
@@ -147,26 +179,6 @@ class EventRepository
           DELETE from event where id = '$eventId'
       ";
 
-    $pdo = Database::getPDO();
-    $pdo->query($sql);
-  }
-
-  /**
-   * affiche les événements paratagées d'un utilisateur
-   *
-   * @param [int] $eventId : identifiant de l'événement
-   * @return Event
-   */
-  public function getFriendEvent($eventId): Event
-  {
-    $sql = "
-    SELECT *
-    FROM event where id = '$eventId'
-    ";
-
-    $pdoStatement = $this->pdo->query($sql);
-    $result = $pdoStatement->fetchObject(Event::class);
-
-    return $result;
+    $this->pdo->query($sql);
   }
 }

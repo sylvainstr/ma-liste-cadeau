@@ -57,6 +57,26 @@ class GiftRepository
   }
 
   /**
+   * affiche les cadeaux d'un utilisateur
+   *
+   * @param [int] $eventId : identifiant de l'événement
+   * @return array
+   */
+  public function findByEventId($eventId)
+  {
+    $sql = "
+    SELECT *
+    FROM gift where user_id = '$eventId'
+    ";
+
+    $pdoStatement = $this->pdo->query($sql);
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Gift::class, ['url_product', 'name', 'price', 'shop', 'url_image_product', 'rank', 'user_id']);
+    $result = $pdoStatement->fetchAll();
+
+    return $result;
+  }
+
+  /**
    * Affiche un cadeau
    *
    * @param [int] $GiftId : identifiant d'un cadeau
@@ -86,7 +106,7 @@ class GiftRepository
   public function save($gift)
   {
     if (empty($gift->getRank())) {
-       $gift->setRank(3);
+      $gift->setRank(3);
     }
 
     $sql = "
@@ -162,7 +182,7 @@ class GiftRepository
     $pdoStatement->bindValue('id', $gift->getId());
 
     $result = $pdoStatement->execute();
-    
+
     if (!$result) {
       throw new Exception($this->pdo->getMessage());
     }

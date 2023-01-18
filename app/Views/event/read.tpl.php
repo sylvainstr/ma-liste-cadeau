@@ -3,8 +3,8 @@
 <a href="<?= $absoluteUrl ?>evenements">Retour</a>
 
 <h2><?= ucfirst($event_read->getName()) ?></h2>
-<h3><?= $event_read->getTargetUser() ?></h3>
-<h3><?= $event_read->getCreatedBy() ?></h3>
+<h3><?= $event_read->getDescription() ?></h3>
+<h3><?= $target_user->getName() ?></h3>
 <h3><?= $event_read->getEndAt() ?></h3>
 
 
@@ -30,14 +30,35 @@
       </div>
 
       <div class="gift-item">
-        <h3><?= $gift->getPreference() ?></h3>
+        <h3><?= $gift->getRank() ?></h3>
       </div>
 
       <a href="#">J'offre ce cadeau</a>
 
-      <a href="<?= $absoluteUrl ?>liste/<?= $id ?>/cadeau/modifier/<?= $gift->getId() ?>">Modifier le cadeau</a>
-      <a href="<?= $absoluteUrl ?>liste/<?= $id ?>/cadeau/supprimer/<?= $gift->getId() ?>">Supprimer le cadeau</a>
+      <a href="<?= $absoluteUrl ?>cadeaux/modifier/<?= $gift->getId() ?>">Modifier le cadeau</a>
+      <a href="<?= $absoluteUrl ?>cadeaux/supprimer/<?= $gift->getId() ?>">Supprimer le cadeau</a>
 
     </div>
   <?php endforeach; ?>
+</div>
+
+<div class="add-friend-event">
+
+  <h2>Invitez des amis</h2>
+
+  <input type="text" id="friend-event" name="friend">
+
+  <h3>Liste des amis</h3>
+
+  <a class="add-friend" href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId() ?>/amis/ajouter">Ajouter un ami</a>
+
+  <ul>
+    <?php foreach ($users_event as $user) : ?>
+      <li>
+        <p><?= $user->getName() ?></p>
+        <a class="delete-friend" href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId() ?>/amis/supprimer/<?= $user->getId() ?>">Supprimer</a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+
 </div>

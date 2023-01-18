@@ -5,6 +5,7 @@ namespace App\Repository;
 use PDO;
 use App\Models\User;
 use App\Utils\Database;
+use Exception;
 
 class UserRepository
 {
@@ -51,5 +52,95 @@ class UserRepository
     $user = $pdoStatement->fetch();
 
     return $user;
+  }
+
+  /**
+   * Affiche l'utilisateur correspondant à l'id
+   *
+   * @param [int] $id
+   * @return User
+   */
+  public function findOne($id)
+  {
+    $sql = "
+          SELECT * FROM user
+          WHERE id = '$id'         
+      ";
+
+    $pdoStatement = $this->pdo->query($sql);
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class, ['name', 'email', 'password']);
+    $user = $pdoStatement->fetch();
+
+    return $user;
+  }
+
+  /**
+   * cherche mes amis par le eventId
+   *
+   * @param [int] $eventId : identifiant de l'événement
+   * @return void
+   */
+  public function findFriendsByEventId($eventId)
+  {
+    $sql = "
+          SELECT user.*
+          FROM user_event
+          INNER JOIN user ON user_event.user_id = user.id
+          WHERE event_id = '$eventId'
+      ";
+
+    $pdoStatement = $this->pdo->query($sql);
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class, ['name', 'email', 'password']);
+    $result = $pdoStatement->fetchAll();
+
+    return $result;
+  }
+
+  /**
+   * Ajouter un utilisateur à un événement
+   * 
+   * @param [int] $eventId : identifiant de l'utilisateur
+   * @param [int] $userId : identifiant de l'utilisateur
+   * @return void
+   */
+  public function addUserOfEvent($eventId, $userId)
+  {
+    $sql = "
+            INSERT INTO user_event (
+              user_id,
+              event_id
+            )
+            VALUES (
+              :user_id,
+              :event_id
+            )
+          ";
+
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('user_id', $userId->getId());
+    $pdoStatement->bindValue('event_id', $eventId->getId());
+
+    $result = $pdoStatement->execute();
+    if (!$result) {
+      throw new Exception($this->pdo->getMessage());
+    }
+  }
+
+  /**
+   * Supprimer un utilisateur d'un événement
+   * 
+   * @param [int] $eventId : identifiant de l'utilisateur
+   * @param [int] $userId : identifiant de l'utilisateur
+   * @return void
+   */
+  public function deleteUserOfEvent($userId, $eventId)
+  {
+    $sql = "
+            DELETE FROM user_event
+            WHERE user_id = '$userId'
+            AND event_id = '$eventId'
+          ";
+
+    return $this->pdo->query($sql);
   }
 }

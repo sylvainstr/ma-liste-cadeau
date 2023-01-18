@@ -38,7 +38,7 @@ class FriendsRepository
   }
 
   /**
-   * Affiche tous mes amis
+   * cherche mes amis par le userId
    *
    * @param [int] $userId : identifiant de l'utilisateur
    * @return array

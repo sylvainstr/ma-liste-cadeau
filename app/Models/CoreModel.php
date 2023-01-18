@@ -17,6 +17,19 @@ class CoreModel
     return $this->id;
   }  
 
+
+  /**
+   * Set the value of id
+   *
+   * @return  self
+   */ 
+  public function setId($id)
+  {
+    $this->id = $id;
+
+    return $this;
+  }
+
   /**
    * Get the value of created_at
    */ 
@@ -56,4 +69,5 @@ class CoreModel
 
     return $this;
   }
+
 }

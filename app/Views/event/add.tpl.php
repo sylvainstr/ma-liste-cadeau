@@ -13,12 +13,21 @@
         <textarea type="text" name="description" id="description" required="required" placeholder="Tapez votre description..."></textarea>
       </div>
       <div class="add-event-item">
-        <label for="target_user">Pour</label>
-        <input type="number" name="target_user" id="target_user" required="required">
+        <label for="invit-friend">Inviter un ami</label>
+        <select name="invit-friend[]" id="invit-friend" required="required" multiple>
+          <?php foreach($friends as $friend) : ?>
+            <option value="<?= $friend->getId() ?>"><?= $friend->getName() ?></option>
+          <?php endforeach; ?>
+        </select>
       </div>
       <div class="add-event-item">
-        <label for="created_by">Créé par</label>
-        <input type="number" name="created_by" id="created_by" required="required">
+        <label for="target_user">Pour</label>
+        <select name="target_user" id="target_user">
+          <option value="">Pour tout mes amis</option>
+          <?php foreach($friends as $friend) : ?>
+            <option value="<?= $friend->getId() ?>"><?= $friend->getName() ?></option>
+          <?php endforeach; ?>
+        </select>
       </div>
       <div class="add-event-item">
         <label for="end_at">Date de fin</label>

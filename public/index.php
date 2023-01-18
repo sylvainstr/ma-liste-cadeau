@@ -32,7 +32,7 @@ $router->get('/amis', "Friends#browse");
 $router->get('/amis/invitation', "Friends#invit");
 $router->post('/amis/invitation', "Friends#invit");
 
-// je supprime un utilisateur de mon événement
+// je supprime un utilisateur de ma liste d'amis
 $router->get('/amis/supprimer/:friendid', "Friends#deleteFriend");
 
 // j'affiche mes événements
@@ -49,6 +49,13 @@ $router->post('/evenements/modifier/:eventid', "Event#edit");
 
 // je supprime un événement
 $router->get('/evenements/supprimer/:eventid', "Event#delete");
+
+// j'ajoute un ami à mon événement
+$router->get('/evenements/:eventid/amis/ajouter', "Event#addFriendEvent");
+$router->post('/evenements/:eventid/amis/ajouter', "Event#addFriendEvent");
+
+// je supprime un ami de mon événement
+$router->get('/evenements/:eventid/amis/supprimer/:userid', "Event#deleteFriendEvent");
 
 // je consulte mon événement
 $router->get('/evenements/:eventid', "Event#read");
