@@ -216,21 +216,58 @@ class EventController extends CoreController
   }
 
   /**
-   * ajouter un ami à l'événement
+   * Rechercher un ami
+   *
+   * @param string $searchUsers : recherche de l'utilisateur
+   * @return
+   */
+  public function searchFriendEvent($searchUsers)
+  {
+
+    $userRepo = new UserRepository();
+    $users = $userRepo->searchUsers($searchUsers);
+    
+    $usersList = [];
+
+    foreach ($users as $user) {
+      $usersList[] = [
+        'id' => $user->getId(),
+        'email' => $user->getEmail(),
+        'name' => $user->getName()
+      ];
+    }
+
+    return json_encode($usersList);
+  }
+
+  /**
+   * Ajouter un ami à l'événement
    *
    * @param int $eventId : id de l'événement
-   * @return void
+   * @param int $eventId : id de l'utilisateur
+   * @return
    */
   public function addFriendEvent($eventId, $userId)
   {
-    $userRepo = new UserRepository();
-    $newUser = $userRepo->addUserOfEvent($eventId, $userId);
+    if (isset($_POST['friend-event'])) {
 
-    if (!$newUser) {
-      return Response::send(400, 'Votre ami n\'a pas pu être ajouté de l\'événement');
+      $userSearch = $_POST['friend-event'];
+
+      try {
+        $userRepo = new UserRepository();
+        $newUser = $userRepo->addUserOfEvent($eventId, $userId);
+
+        if (!$newUser) {
+          return Response::send(400, 'Votre ami n\'a pas pu être ajouté de l\'événement');
+        }
+
+        return Response::send(200);
+      } catch (\Exception $exception) {
+        var_dump($exception->getMessage());
+      }
     }
 
-    return Response::send(200);
+    $this->render('event/read');
   }
 
   /**
@@ -247,7 +284,7 @@ class EventController extends CoreController
     if (!$result) {
       return Response::send(400, 'Votre ami n\'a pas pu être supprimé de l\'événement');
     }
-    
+
     return Response::send(200);
   }
 }

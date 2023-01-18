@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use PDO;
 use App\Utils\Database;
-use App\Models\Friends;
 use App\Models\User;
 use Exception;
 
@@ -19,22 +18,29 @@ class FriendsRepository
   }
 
   /**
-   * Affiche l'utilisateur correspondant au user_id de la table friends
+   * Vérifie qu'ils sont amis
    *
-   * @param [string] $userId : identifiant de l'utilisateur
-   * @return void
+   * @param [int] $userId
+   * @param [int] $friendId
+   * @return boolean
    */
-  public function searchUserFriends($userId)
+  public function isFriend($userId, $friendId)
   {
     $sql = "
-          SELECT * FROM friends
-          WHERE user_id = '$userId'
-      ";
+            SELECT *
+            FROM friends
+            WHERE (user_id = :userId AND friend_id = :friendId)
+            OR (user_id = :friendId AND friend_id = :userId)
+          ";
 
-    $pdoStatement = $this->pdo->query($sql);
-    $result = $pdoStatement->fetchObject(Friends::class);
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('userId', $userId);
+    $pdoStatement->bindValue('friendId', $friendId);
 
-    return $result;
+    $pdoStatement->execute();
+    $result = $pdoStatement->fetch();
+
+    return ($result !== false);
   }
 
   /**
@@ -45,6 +51,23 @@ class FriendsRepository
    */
   public function findFriendsByUserId($userId): array
   {
+    
+    $usersId = $this->getFriendsIdByUserId($userId);
+
+    $sql = "
+          SELECT *
+          FROM user
+          WHERE id IN (" . implode(",", $usersId) . ")
+      ";
+
+    $pdoStatement = $this->pdo->query($sql);
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class, ['email', 'password', 'name', 'role']);
+    $result = $pdoStatement->fetchAll();
+
+    return $result;
+  }
+
+  public function getFriendsIdByUserId($userId) {
     $sql = "
           SELECT friends.friend_id
           FROM friends
@@ -65,17 +88,7 @@ class FriendsRepository
 
     $usersId = array_merge($usersId1, $usersId2);
 
-    $sql = "
-          SELECT *
-          FROM user
-          WHERE id IN (" . implode(",", $usersId) . ")
-      ";
-
-    $pdoStatement = $this->pdo->query($sql);
-    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class, ['email', 'password', 'name', 'role']);
-    $result = $pdoStatement->fetchAll();
-
-    return $result;
+    return $usersId;
   }
 
   /**

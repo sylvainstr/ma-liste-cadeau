@@ -64,6 +64,9 @@ $router->get('/evenements/:eventid', "Event#read");
 $router->get('/evenements/:eventid/inviter/amis', "Event#addFriend");
 $router->post('/evenements/:eventid/inviter/amis', "Event#addFriend");
 
+// je recherche un ami à un événement
+$router->get('/rechercher/amis/:searchusers', "Event#searchFriendEvent");
+
 // j'accéde au formulaire d'inscription
 $router->get('/inscription', "User#register");
 $router->post('/inscription', "User#register");

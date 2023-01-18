@@ -93,3 +93,16 @@ footer {
   padding: 1rem;
   width: 300px;
 }
+
+.list-friend-event li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.add-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-block: 1rem;
+}

@@ -45,20 +45,23 @@
 <div class="add-friend-event">
 
   <h2>Invitez des amis</h2>
+  <div class="add-group">
+    <input type="text" id="friend-event" name="friend-event" placeholder="Saisir un nom ou un email">
 
-  <input type="text" id="friend-event" name="friend">
-
+    <a class="add-friend" href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId() ?>/amis/ajouter">Ajouter un ami</a>
+  </div>
   <h3>Liste des amis</h3>
 
-  <a class="add-friend" href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId() ?>/amis/ajouter">Ajouter un ami</a>
-
-  <ul>
-    <?php foreach ($users_event as $user) : ?>
-      <li>
-        <p><?= $user->getName() ?></p>
-        <a class="delete-friend" href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId() ?>/amis/supprimer/<?= $user->getId() ?>">Supprimer</a>
-      </li>
-    <?php endforeach; ?>
-  </ul>
-
+  <div class="list-friend-event">
+    <ul>
+      <?php foreach ($users_event as $user) : ?>
+        <li>
+          <p><?= $user->getName() ?></p>
+          <a class="delete-friend" href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId() ?>/amis/supprimer/<?= $user->getId() ?>">
+            <img src="<?= $absoluteUrl ?>/assets/images/cross.png" alt="image d'une croix">
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
 </div>

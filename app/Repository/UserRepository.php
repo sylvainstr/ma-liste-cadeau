@@ -96,6 +96,37 @@ class UserRepository
     return $result;
   }
 
+
+  /**
+   * Recherche un utilisateur
+   * 
+   * @param [string] $searchUsers : résultat de la recherche
+   * @return
+   */
+  public function searchUsers($searchUsers)
+  {
+    $friendsRepo = new FriendsRepository();
+    $friendsId = $friendsRepo->getFriendsIdByUserId($_SESSION['user']['id']);
+
+    $sql = "
+            SELECT id, email, name, password
+            FROM user            
+            WHERE id IN (" . implode(",", $friendsId) . ") AND 
+            name LIKE CONCAT('%', :searchUsers, '%')
+            OR email LIKE CONCAT('%', :searchUsers, '%')
+          ";
+
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('userId', $_SESSION['user']['id']);
+    $pdoStatement->bindValue('searchUsers', $searchUsers, PDO::PARAM_STR);
+
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, User::class, ['name', 'email', 'password']);
+    $pdoStatement->execute();
+    $users = $pdoStatement->fetchAll();
+
+    return $users;
+  }
+
   /**
    * Ajouter un utilisateur à un événement
    * 

@@ -65,12 +65,13 @@ class FriendsController extends CoreController
         exit;
       }
 
+      $userId = $_SESSION['user']['id'];
       $friendId = $newFriend->getId();
       $alreadyFriend = new FriendsRepository();
-      $alreadyFriend = $alreadyFriend->searchUserFriends($friendId);
+      $alreadyFriend = $alreadyFriend->isFriend($userId, $friendId);
 
       // si l'utilisateur existe déjà en BDD
-      if (!$alreadyFriend) {
+      if ($alreadyFriend) {
         FlashMessage::create_flash_message('error', 'Cet utilisateur fait déjà parti de vos amis', 'FLASH_ERROR');
         $config = Config::getInstance();
         $absoluteUrl =  $config['ABSOLUTE_URL'];
