@@ -52,11 +52,22 @@ h1 {
   background-color: lightcoral;
 }
 
+.event-group {
+  display: flex;
+  gap: 35rem;
+  padding: 2rem 2rem;
+}
+
 .gift-group {
   display: flex;
-  gap: 2rem;
   padding-top: 2rem;
-  padding: 2rem 0 0 2rem;
+  gap: 2rem;
+}
+
+.gift-event-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 .gift {
@@ -69,12 +80,31 @@ h1 {
   width: 350px;
 }
 
+.gift-item,
+.gift-item-rank {
+  padding-block: 0.5rem;
+}
+
+
+.gift-item-rank {
+  display: none;  
+}
+
 .gift-item a img {
   max-width: 250px;
 }
 
 .gift-item h3 {
   text-align: center;
+}
+
+.stars {
+  display: flex;
+  padding-bottom: 1rem;
+}
+
+.checked {
+  color: green;
 }
 
 /* Footer */

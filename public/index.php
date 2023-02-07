@@ -38,7 +38,6 @@ $router->get('/amis/supprimer/:friendid', "Friends#deleteFriend");
 // j'affiche mes événements
 $router->get('/evenements', "Event#browse");
 
-
 // j'ajoute un événement
 $router->get('/evenements/ajouter', "Event#add");
 $router->post('/evenements/ajouter', "Event#add");
@@ -50,22 +49,17 @@ $router->post('/evenements/modifier/:eventid', "Event#edit");
 // je supprime un événement
 $router->get('/evenements/supprimer/:eventid', "Event#delete");
 
-// j'ajoute un ami à mon événement
-$router->get('/evenements/:eventid/amis/ajouter', "Event#addFriendEvent");
-$router->post('/evenements/:eventid/amis/ajouter', "Event#addFriendEvent");
-
-// je supprime un ami de mon événement
-$router->get('/evenements/:eventid/amis/supprimer/:userid', "Event#deleteFriendEvent");
-
 // je consulte mon événement
 $router->get('/evenements/:eventid', "Event#read");
 
-// j'ajoute un ami à un événement
-$router->get('/evenements/:eventid/inviter/amis', "Event#addFriend");
-$router->post('/evenements/:eventid/inviter/amis', "Event#addFriend");
-
 // je recherche un ami à un événement
 $router->get('/rechercher/amis/:searchusers', "Event#searchFriendEvent");
+
+// j'ajoute un ami à mon événement
+$router->get('/evenements/:eventid/amis/ajouter/:userid', "Event#addFriendEvent");
+
+// je supprime un ami de mon événement
+$router->get('/evenements/:eventid/amis/supprimer/:userid', "Event#deleteFriendEvent");
 
 // j'accéde au formulaire d'inscription
 $router->get('/inscription', "User#register");

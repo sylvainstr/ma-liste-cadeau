@@ -29,12 +29,14 @@ class EventController extends CoreController
     }
 
     $userId = $_SESSION['user']['id'];
-
+    
     $eventRepo = new EventRepository();
     $events = $eventRepo->findByUserId($userId);
+    $eventsShare = $eventRepo->findByShareUserId($userId);
 
     $this->render('event/list', [
-      'events' => $events
+      'events' => $events,
+      'events_share' => $eventsShare
     ]);
   }
 
@@ -61,7 +63,7 @@ class EventController extends CoreController
     $usersEvent = $userRepo->findFriendsByEventId($eventId);
 
     $giftRepo = new GiftRepository();
-    $gifts = $giftRepo->findByEventId($eventId);
+    $gifts = $giftRepo->findByUserId($eventById->getTargetUser());
 
     $this->render('event/read', [
       'event_read' => $eventById,
@@ -226,7 +228,7 @@ class EventController extends CoreController
 
     $userRepo = new UserRepository();
     $users = $userRepo->searchUsers($searchUsers);
-    
+
     $usersList = [];
 
     foreach ($users as $user) {
@@ -237,37 +239,35 @@ class EventController extends CoreController
       ];
     }
 
-    return json_encode($usersList);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($usersList);
   }
 
   /**
    * Ajouter un ami à l'événement
    *
    * @param int $eventId : id de l'événement
-   * @param int $eventId : id de l'utilisateur
    * @return
    */
   public function addFriendEvent($eventId, $userId)
   {
-    if (isset($_POST['friend-event'])) {
+    $userRepo = new UserRepository();
+    $result = $userRepo->addUserOfEvent($eventId, $userId);
 
-      $userSearch = $_POST['friend-event'];
+    $user = $userRepo->findOne($userId);
 
-      try {
-        $userRepo = new UserRepository();
-        $newUser = $userRepo->addUserOfEvent($eventId, $userId);
+    if (!$result) {
+      return Response::send(400, 'Votre ami n\'a pas pu être ajouté à l\'événement');
+    } else {
 
-        if (!$newUser) {
-          return Response::send(400, 'Votre ami n\'a pas pu être ajouté de l\'événement');
-        }
+      http_response_code(200);
+      header('Content-Type: application/json');
 
-        return Response::send(200);
-      } catch (\Exception $exception) {
-        var_dump($exception->getMessage());
-      }
+      echo     json_encode([
+        'id' => $user->getId(),
+        'name' => $user->getName()
+      ]);
     }
-
-    $this->render('event/read');
   }
 
   /**

@@ -23,14 +23,14 @@
 
     <h2>Mes événements partagées</h2>
 
-    <?php foreach ($friend_events as $friend_event) : ?>
+    <?php foreach ($events_share as $event) : ?>
 
       <?php
-      $eventId = $friend_event->getId();
+      $eventId = $event->getId();
       ?>
 
-      <h3><?= ucfirst($friend_event->getName()) ?></h3>
-      <h3><?= $friend_event->getDescription() ?></h3>
+      <h3><?= ucfirst($event->getName()) ?></h3>
+      <h3><?= $event->getDescription() ?></h3>
 
       <a href="<?= $absoluteUrl ?>evenements/<?= $eventId ?>">Voir l'événement</a>
       <a href="<?= $absoluteUrl ?>evenements/modifier/<?= $eventId ?>">Modifier l'événement</a>

@@ -130,7 +130,7 @@ class UserRepository
   /**
    * Ajouter un utilisateur à un événement
    * 
-   * @param [int] $eventId : identifiant de l'utilisateur
+   * @param [int] $eventId : identifiant de l'événement
    * @param [int] $userId : identifiant de l'utilisateur
    * @return void
    */
@@ -146,15 +146,18 @@ class UserRepository
               :event_id
             )
           ";
-
+          
     $pdoStatement = $this->pdo->prepare($sql);
-    $pdoStatement->bindValue('user_id', $userId->getId());
-    $pdoStatement->bindValue('event_id', $eventId->getId());
+    $pdoStatement->bindValue('user_id', $userId);
+    $pdoStatement->bindValue('event_id', $eventId);
 
     $result = $pdoStatement->execute();
+    
     if (!$result) {
       throw new Exception($this->pdo->getMessage());
     }
+
+    return $result;
   }
 
   /**

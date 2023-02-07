@@ -38,6 +38,28 @@ class EventRepository
   }
 
   /**
+   * affiche les événements partagés à un utilisateur
+   *
+   * @param [int] $userId : identifiant de l'utilisateur
+   * @return array
+   */
+  public function findByShareUserId($userId): array
+  { 
+    $sql = "
+    SELECT event.*
+    FROM user_event
+    INNER JOIN event
+    WHERE user_event.user_id = '$userId'
+    ";
+
+    $pdoStatement = $this->pdo->query($sql);
+    $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Event::class, ['name', 'description', 'target_user', 'created_by', 'end_at']);
+    $result = $pdoStatement->fetchAll();
+
+    return $result;
+  }
+
+  /**
    * Trouve un événement
    *
    * @param [int] $eventId : identifiant d'un événement

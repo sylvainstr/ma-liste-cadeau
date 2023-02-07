@@ -24,11 +24,24 @@
             <h3><?= $gift->getPrice() ?></h3>
           </div>
 
-          <div class="gift-item">
+          <div class="gift-item-rank">
             <h3><?= $gift->getRank() ?></h3>
           </div>
 
-          <a href="#">J'offre ce cadeau</a>
+          <div class="stars">
+
+          <?php
+          for ($i = 1; $i <= 5; $i++) : ?>
+
+            <?php if ($i <= $gift->getRank()) : ?>
+              <i class="fas fa-star"></i>
+            <?php else : ?>
+              <i class="far fa-star"></i>
+            <?php endif; ?>
+
+          <?php endfor; ?>
+
+        </div>
 
           <a href="<?= $absoluteUrl ?>cadeaux/modifier/<?= $gift->getId() ?>">Modifier le cadeau</a>
           <a href="<?= $absoluteUrl ?>cadeaux/supprimer/<?= $gift->getId() ?>">Supprimer le cadeau</a>

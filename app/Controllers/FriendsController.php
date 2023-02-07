@@ -93,8 +93,6 @@ class FriendsController extends CoreController
     $this->render('friends/invit-friend');
   }
 
-
-
   /**
    * Supprime un utilisateur de la liste
    *
