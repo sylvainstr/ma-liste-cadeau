@@ -68,10 +68,8 @@ class EventController extends CoreController
     $alreadyOffer = [];
 
     foreach ($gifts as $gift) {
-      $alreadyOffer[$gift->getId()] = $giftRepo->giftAlreadyOffer($eventId, $gift->getId());
+      $alreadyOffer[$gift->getId()] = $giftRepo->isAlreadyTaken($eventId, $gift->getId());
     }
-
-    // var_dump($alreadyOffer);die;
 
     $this->render('event/read', [
       'event_read' => $eventById,
@@ -139,9 +137,11 @@ class EventController extends CoreController
         $eventRepo = new EventRepository();
         $idEvent = $eventRepo->save($newEvent);
         $newEvent->setId($idEvent);
-
+        
         // enregistrement des invités
         $userRepo = new UserRepository();
+        // ajoute celui qui crée l'annonce dans la liste des invités
+        $result = $userRepo->addUserOfEvent($idEvent, $createdBy);
 
         foreach ($invitFriends as $friendId) {
           $user = $userRepo->findOne($friendId);
@@ -300,7 +300,7 @@ class EventController extends CoreController
     if ($alreadyInvit) {
       return Response::send(400, null, "Votre ami a déjà été ajouté à l'événement");
     } else {
-
+      
       $result = $userRepo->addUserOfEvent($eventId, $userId);
 
       

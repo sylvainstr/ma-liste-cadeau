@@ -23,7 +23,6 @@
       <div class="add-event-item">
         <label for="target_user">Pour</label>
         <select name="target_user" id="target_user">
-          <option value="">Pour tout mes amis</option>
           <?php foreach($friends as $friend) : ?>
             <option value="<?= $friend->getId() ?>"><?= $friend->getName() ?></option>
           <?php endforeach; ?>

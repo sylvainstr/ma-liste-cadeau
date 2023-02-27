@@ -137,7 +137,7 @@ class GiftRepository
   }
 
   /**
-   * cadeau déjà offert
+   * Vérifie si le cadeau a déja été offert
    * @param [int] $giftId : identifiant d'un événement
    * @param [int] $eventId : identifiant d'un cadeau
    * @return void
@@ -159,32 +159,6 @@ class GiftRepository
     $pdoStatement->execute();
     $count = $pdoStatement->rowCount();
 
-    return $count > 0;
-  }
-
-  /**
-   * Vérifie si le cadeau a déja été offert
-   * @param [int] $eventId : identifiant de l'événement
-   * @param [int] $giftId : identifiant du cadeau
-   * @return void
-   */
-  public function giftAlreadyOffer($eventId, $giftId)
-  {
-
-    $sql = "
-            SELECT *
-            FROM user_event_gift
-            WHERE user_event_gift.event_id = '$eventId'
-            AND user_event_gift.gift_id = '$giftId'
-            ";
-
-    $pdoStatement = $this->pdo->prepare($sql);
-    $pdoStatement->bindValue('event_id', $eventId);
-    $pdoStatement->bindValue('gift_id', $giftId);
-
-    $pdoStatement->execute();
-    $count = $pdoStatement->rowCount();
-    
     return $count > 0;
   }
 

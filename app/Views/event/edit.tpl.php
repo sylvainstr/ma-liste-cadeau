@@ -16,7 +16,7 @@
     </div>
     <div class="edit-event-item">
       <label for="invit-friend">Inviter un ami</label>
-      <select name="invit-friend[]" id="invit-friend" required="required" multiple>
+      <select name="invit-friend" id="invit-friend" required="required" multiple>
         <?php foreach ($friends as $friend) : ?>
           <option value="<?= $friend->getId() ?>"><?= $friend->getName() ?></option>
         <?php endforeach; ?>
@@ -25,7 +25,6 @@
     <div class="edit-event-item">
       <label for="target_user">Pour</label>
       <select name="target_user" id="target_user">
-        <option value="">Pour tout mes amis</option>
         <?php foreach ($friends as $friend) : ?>
           <option value="<?= $friend->getId() ?>"><?= $friend->getName() ?></option>
         <?php endforeach; ?>

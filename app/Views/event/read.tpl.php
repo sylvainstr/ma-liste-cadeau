@@ -50,7 +50,7 @@
 
           </div>
 
-          <?php if ($already_offer) : ?>
+          <?php if ($already_offer[$gift->getId()]) : ?>
             <a href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId(); ?>/offrir/cadeau/<?= $gift->getId(); ?>">Déjà offert</a>
           <?php else : ?>
             <a href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId(); ?>/offrir/cadeau/<?= $gift->getId(); ?>">J'offre ce cadeau</a>

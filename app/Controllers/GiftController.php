@@ -83,8 +83,11 @@ class GiftController extends CoreController
   public function edit($giftId)
   {
 
-    $gitRepo = new GiftRepository();
-    $gift = $gitRepo->findOne($giftId);
+    $giftRepo = new GiftRepository();
+    $gift = $giftRepo->findOne($giftId);
+
+    $userId = $_SESSION['user']['id'];
+    $gifts = $giftRepo->findByUserId($userId);
 
     if (!$gift) {
       FlashMessage::create_flash_message('error', 'Le cadeau n\'existe pas', 'FLASH_ERROR');
@@ -112,7 +115,7 @@ class GiftController extends CoreController
         $gift->setUrlImageProduct($urlImgProduct);
         $gift->setRank($rank);
 
-        $gitRepo->edit($gift);
+        $giftRepo->edit($gift);
       } catch (\Exception $exception) {
         var_dump($exception->getMessage());
       }
@@ -126,7 +129,8 @@ class GiftController extends CoreController
     }
 
     $this->render('gift/edit', [
-      'gift_edit' => $gift
+      'gift_edit' => $gift,
+      'gifts' =>  $gifts
     ]);
   }
 

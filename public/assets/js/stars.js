@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   
   const stars = document.querySelectorAll(".fa-star"); 
-  let currentStars = document.querySelector(".invisible");
-  
+  let currentStars = document.querySelector(".edit-gift-item-rank");
+  let rank = document.querySelector("#rank");
+
   let check = false;
 
   stars.forEach(star => {
@@ -36,13 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     currentStars.value = e.target.getAttribute("data-star");
     
+    rank.value = currentStars.value;
+    
     // console.log(currentStars.value);
    }
 
   function previousSiblings(data) {
     let values = [data];
     
-    while (data = data.previousSibling) {
+    while (data = data.previousSibling ) {
       if(data.nodeName === 'I') {
         values.push(data);
       }

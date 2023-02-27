@@ -25,9 +25,9 @@
       <label for="url_image_product">Lien de l'image du cadeau</label>
       <input type="url" name="url_image_product" id="url_image_product" placeholder="https://www.mon-site-de-jouet.com/image/0026" value="<?= $gift_edit->getUrlImageProduct() ?>">
     </div>
-    <div class="edit-gift-item-rank invisible">
+    <div class="edit-gift-item-rank">
       <label for="rank">Préférence du cadeau</label>
-      <input type="number" name="rank" id="rank" value="<?= $gift_edit->getRank() ?>">
+      <input type="hidden" name="rank" id="rank" value="<?= $gift_edit->getRank() ?>">
     </div>
     <div class="select-stars">
       <i class="fas fa-star" data-star="1"></i>
