@@ -29,7 +29,7 @@ class EventController extends CoreController
     }
 
     $userId = $_SESSION['user']['id'];
-    
+
     $eventRepo = new EventRepository();
     $events = $eventRepo->findByUserId($userId);
     $eventsShare = $eventRepo->findByShareUserId($userId);
@@ -48,12 +48,12 @@ class EventController extends CoreController
    */
   public function read($eventId)
   {
+
     $eventRepo = new EventRepository();
     $eventById = $eventRepo->findOne($eventId);
 
     $userRepo = new UserRepository();
     $targetUser = $userRepo->findOne($eventById->getTargetUser());
-
     // l'id n'existe pas
     if (empty($eventById)) {
       $errorController = new ErrorController();
@@ -65,16 +65,55 @@ class EventController extends CoreController
     $giftRepo = new GiftRepository();
     $gifts = $giftRepo->findByUserId($eventById->getTargetUser());
 
+    $alreadyOffer = [];
+
+    foreach ($gifts as $gift) {
+      $alreadyOffer[$gift->getId()] = $giftRepo->giftAlreadyOffer($eventId, $gift->getId());
+    }
+
+    // var_dump($alreadyOffer);die;
+
     $this->render('event/read', [
       'event_read' => $eventById,
       'gifts' => $gifts,
       'target_user' => $targetUser,
-      'users_event' => $usersEvent
+      'users_event' => $usersEvent,
+      'already_offer' => $alreadyOffer
     ]);
   }
 
+
+  public function offer($eventId, $giftId)
+  {
+    $eventRepo = new EventRepository();
+    $eventById = $eventRepo->findOne($eventId);
+
+    $name = $eventById->getName();
+    $description = $eventById->getDescription();
+    $targetUser = $eventById->getTargetUser();
+    $createdBy = $eventById->getCreatedBy();
+    $endAt = $eventById->getEndAt();
+
+    $event = new Event($name, $description, $targetUser, $createdBy, $endAt);
+
+    $giftRepo = new GiftRepository();
+
+    if (!$giftRepo->isAlreadyTaken($eventId, $giftId)) {
+
+      $giftOffer = $giftRepo->giftOffer($event, $eventId, $giftId, $_SESSION['user']['id']);
+      FlashMessage::create_flash_message('buy_gift_success', 'Ce cadeau a bien été offert', 'FLASH_SUCCESS');
+    } else {
+      FlashMessage::create_flash_message('buy_gift_error', 'Ce cadeau a déjà été offert', 'FLASH_ERROR');
+    }
+
+    $config = Config::getInstance();
+    $absoluteUrl =  $config['ABSOLUTE_URL'];
+    header("Location: $absoluteUrl" . "evenements/" . $eventId);
+    exit;
+  }
+
   /**
-   * Ajouter une liste
+   * Ajouter une événement
    *
    * @return void
    */
@@ -134,7 +173,7 @@ class EventController extends CoreController
   }
 
   /**
-   * Modifier une liste
+   * Modifier une événement
    *
    * @param int $eventId : id de la liste
    * @return void
@@ -240,6 +279,7 @@ class EventController extends CoreController
     }
 
     header('Content-Type: application/json; charset=utf-8');
+   
     echo json_encode($usersList);
   }
 
@@ -247,26 +287,37 @@ class EventController extends CoreController
    * Ajouter un ami à l'événement
    *
    * @param int $eventId : id de l'événement
+   * @param int $userId : id de l'utilisateur
    * @return
    */
   public function addFriendEvent($eventId, $userId)
   {
+
     $userRepo = new UserRepository();
-    $result = $userRepo->addUserOfEvent($eventId, $userId);
 
-    $user = $userRepo->findOne($userId);
+    $alreadyInvit = $userRepo->isInvit($eventId, $userId);
 
-    if (!$result) {
-      return Response::send(400, 'Votre ami n\'a pas pu être ajouté à l\'événement');
+    if ($alreadyInvit) {
+      return Response::send(400, null, "Votre ami a déjà été ajouté à l'événement");
     } else {
 
-      http_response_code(200);
-      header('Content-Type: application/json');
+      $result = $userRepo->addUserOfEvent($eventId, $userId);
 
-      echo     json_encode([
-        'id' => $user->getId(),
-        'name' => $user->getName()
-      ]);
+      
+      if (!$result) {
+        return Response::send(400, 'Votre ami n\'a pas pu être ajouté à l\'événement');
+      } else {
+        
+        $user = $userRepo->findOne($userId);
+
+        http_response_code(200);
+        header('Content-Type: application/json');
+
+        echo     json_encode([
+          'id' => $user->getId(),
+          'name' => $user->getName()
+        ]);
+      }
     }
   }
 

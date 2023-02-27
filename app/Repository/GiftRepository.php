@@ -57,7 +57,7 @@ class GiftRepository
   }
 
   /**
-   * affiche les cadeaux d'un utilisateur
+   * affiche les cadeaux d'un événement
    *
    * @param [int] $eventId : identifiant de l'événement
    * @return array
@@ -95,6 +95,97 @@ class GiftRepository
     $result = $pdoStatement->fetch();
 
     return $result;
+  }
+
+  /**
+   * offre un cadeau
+   * @param Event $event : représente les informations un événement
+   * @param [int] $giftId : identifiant d'un événement
+   * @param [int] $eventId : identifiant d'un cadeau
+   * @return void
+   */
+  public function giftOffer($event, $eventId, $giftId, $buyerId)
+  {
+
+    $sql = "
+    INSERT INTO user_event_gift (
+      event_id,
+      user_id,
+      gift_id,
+      buyers_id,
+      taken_at
+      )
+    VALUES (
+      :event_id,
+      :user_id,
+      :gift_id,
+      :buyers_id,
+      NOW()
+      )
+    ";
+
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('event_id', $eventId);
+    $pdoStatement->bindValue('user_id', $event->getCreatedBy());
+    $pdoStatement->bindValue('gift_id', $giftId);
+    $pdoStatement->bindValue('buyers_id', $buyerId);
+
+    $result = $pdoStatement->execute();
+    if (!$result) {
+      throw new Exception($this->pdo->getMessage());
+    }
+  }
+
+  /**
+   * cadeau déjà offert
+   * @param [int] $giftId : identifiant d'un événement
+   * @param [int] $eventId : identifiant d'un cadeau
+   * @return void
+   */
+  public function isAlreadyTaken($eventId, $giftId)
+  {
+
+    $sql = "
+            SELECT *
+            FROM user_event_gift
+            WHERE 
+              event_id = :event_id AND gift_id = :gift_id
+            ";
+
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('event_id', $eventId);
+    $pdoStatement->bindValue('gift_id', $giftId);
+
+    $pdoStatement->execute();
+    $count = $pdoStatement->rowCount();
+
+    return $count > 0;
+  }
+
+  /**
+   * Vérifie si le cadeau a déja été offert
+   * @param [int] $eventId : identifiant de l'événement
+   * @param [int] $giftId : identifiant du cadeau
+   * @return void
+   */
+  public function giftAlreadyOffer($eventId, $giftId)
+  {
+
+    $sql = "
+            SELECT *
+            FROM user_event_gift
+            WHERE user_event_gift.event_id = '$eventId'
+            AND user_event_gift.gift_id = '$giftId'
+            ";
+
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('event_id', $eventId);
+    $pdoStatement->bindValue('gift_id', $giftId);
+
+    $pdoStatement->execute();
+    $count = $pdoStatement->rowCount();
+    
+    return $count > 0;
   }
 
   /**

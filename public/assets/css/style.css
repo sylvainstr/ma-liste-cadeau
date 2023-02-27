@@ -54,13 +54,11 @@ h1 {
 
 .event-group {
   display: flex;
-  gap: 35rem;
   padding: 2rem 2rem;
 }
 
 .gift-group {
   display: flex;
-  padding-top: 2rem;
   gap: 2rem;
 }
 
@@ -122,6 +120,11 @@ footer {
   border-radius: 15px;
   padding: 1rem;
   width: 300px;
+  margin: auto;
+}
+
+.add-friend-event h3 {
+  padding-bottom: 1rem;
 }
 
 .list-friend-event li {

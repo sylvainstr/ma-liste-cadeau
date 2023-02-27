@@ -150,14 +150,38 @@ class UserRepository
     $pdoStatement = $this->pdo->prepare($sql);
     $pdoStatement->bindValue('user_id', $userId);
     $pdoStatement->bindValue('event_id', $eventId);
-
-    $result = $pdoStatement->execute();
     
+    $result = $pdoStatement->execute();
     if (!$result) {
       throw new Exception($this->pdo->getMessage());
     }
 
     return $result;
+  }
+
+  /**
+   * Vérifie qu'ils sont invités
+   *
+   * @param [int] $eventId
+   * @param [int] $userId
+   * @return boolean
+   */
+  public function isInvit($eventId, $userId)
+  {
+    $sql = "
+            SELECT *
+            FROM user_event
+            WHERE (user_id = :userId AND event_id = :eventId)
+          ";
+
+    $pdoStatement = $this->pdo->prepare($sql);
+    $pdoStatement->bindValue('userId', $userId);
+    $pdoStatement->bindValue('eventId', $eventId);
+
+    $pdoStatement->execute();
+    $result = $pdoStatement->fetch();
+
+    return ($result !== false);
   }
 
   /**

@@ -2,8 +2,8 @@
 
 <h2><?= ucfirst($event_read->getName()) ?></h2>
 <h3><?= $event_read->getDescription() ?></h3>
-<h3><?= $target_user->getName() ?></h3>
-<h3><?= $event_read->getEndAt() ?></h3>
+<!-- <h3><?= $target_user->getName() ?></h3> -->
+<h3>Le <?= $event_read->getEndAt() ?></h3>
 
 <div class="event-group">
 
@@ -11,47 +11,54 @@
   <div class="gift-event-group">
     <h2>Liste des cadeaux</h2>
 
-    <?php foreach ($gifts as $gift) : ?>
+    <div class="gift-group">
 
-      <div class="gift">
-        <div class="gift-item">
-          <a href="<?= $gift->getUrlProduct() ?>" target="_blank">
-            <img src="<?= $gift->getUrlImageProduct() ?>" alt="image du cadeau">
-          </a>
+      <?php foreach ($gifts as $gift) : ?>
+
+        <div class="gift">
+          <div class="gift-item">
+            <a href="<?= $gift->getUrlProduct() ?>" target="_blank">
+              <img src="<?= $gift->getUrlImageProduct() ?>" alt="image du cadeau">
+            </a>
+          </div>
+          <div class="gift-item">
+            <h3><?= $gift->getName() ?></h3>
+          </div>
+          <div class="gift-item">
+            <h3><a href="<?= $gift->getUrlProduct() ?>" target="_blank">Chez <?= $gift->getShop() ?></a></h3>
+          </div>
+          <div class="gift-item">
+            <h3><?= $gift->getPrice() ?></h3>
+          </div>
+
+          <div class="gift-item-rank">
+            <h3><?= $gift->getRank() ?></h3>
+          </div>
+
+          <div class="stars">
+
+            <?php
+            for ($i = 1; $i <= 5; $i++) : ?>
+
+              <?php if ($i <= $gift->getRank()) : ?>
+                <i class="fas fa-star"></i>
+              <?php else : ?>
+                <i class="far fa-star"></i>
+              <?php endif; ?>
+
+            <?php endfor; ?>
+
+          </div>
+
+          <?php if ($already_offer) : ?>
+            <a href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId(); ?>/offrir/cadeau/<?= $gift->getId(); ?>">Déjà offert</a>
+          <?php else : ?>
+            <a href="<?= $absoluteUrl ?>evenements/<?= $event_read->getId(); ?>/offrir/cadeau/<?= $gift->getId(); ?>">J'offre ce cadeau</a>
+          <?php endif; ?>
+
         </div>
-        <div class="gift-item">
-          <h3><?= $gift->getName() ?></h3>
-        </div>
-        <div class="gift-item">
-          <h3><a href="<?= $gift->getUrlProduct() ?>" target="_blank">Chez <?= $gift->getShop() ?></a></h3>
-        </div>
-        <div class="gift-item">
-          <h3><?= $gift->getPrice() ?></h3>
-        </div>
-
-        <div class="gift-item-rank">
-          <h3><?= $gift->getRank() ?></h3>
-        </div>
-
-        <div class="stars">
-
-          <?php
-          for ($i = 1; $i <= 5; $i++) : ?>
-
-            <?php if ($i <= $gift->getRank()) : ?>
-              <i class="fas fa-star"></i>
-            <?php else : ?>
-              <i class="far fa-star"></i>
-            <?php endif; ?>
-
-          <?php endfor; ?>
-
-        </div>
-
-        <a href="#">J'offre ce cadeau</a>
-
-      </div>
-    <?php endforeach; ?>
+      <?php endforeach; ?>
+    </div>
   </div>
 
   <div class="add-friend-event">
@@ -77,3 +84,5 @@
     </div>
   </div>
 </div>
+
+<script src="<?= $absoluteUrl ?>assets/js/script.js" defer='true'></script> 

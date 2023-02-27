@@ -52,6 +52,9 @@ $router->get('/evenements/supprimer/:eventid', "Event#delete");
 // je consulte mon événement
 $router->get('/evenements/:eventid', "Event#read");
 
+// j'offre un cadeau
+$router->get('/evenements/:eventid/offrir/cadeau/:giftid', "Event#offer");
+
 // je recherche un ami à un événement
 $router->get('/rechercher/amis/:searchusers', "Event#searchFriendEvent");
 

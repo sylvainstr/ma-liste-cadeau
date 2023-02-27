@@ -53,7 +53,7 @@ class FriendsRepository
   {
     
     $usersId = $this->getFriendsIdByUserId($userId);
-
+    
     $sql = "
           SELECT *
           FROM user
@@ -67,6 +67,12 @@ class FriendsRepository
     return $result;
   }
 
+  /**
+   * Chercher les amis d'un utilisateur
+   *
+   * @param [int] $userId : identifiant de l'utilisateur
+   * @return void
+   */
   public function getFriendsIdByUserId($userId) {
     $sql = "
           SELECT friends.friend_id

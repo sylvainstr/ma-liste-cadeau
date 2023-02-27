@@ -96,7 +96,7 @@ class UserController extends CoreController
       header("Location: $absoluteUrl");
       exit;
     }
-    // On vérifie si le formailaire a été envoyé
+    // On vérifie si le formulaire a été envoyé
     if (!empty($_POST)) {
       // Le formulaire a été envoyé
       // On vérifie que tous les champs requis sont remplis

@@ -9,9 +9,7 @@
       <?php
       $eventId = $event->getId();
       ?>
-
-      <p>NEW EVENT</p>
-
+     
       <h3><?= ucfirst($event->getName()) ?></h3>
       <h3><?= $event->getDescription() ?></h3>
 
@@ -33,8 +31,6 @@
       <h3><?= $event->getDescription() ?></h3>
 
       <a href="<?= $absoluteUrl ?>evenements/<?= $eventId ?>">Voir l'événement</a>
-      <a href="<?= $absoluteUrl ?>evenements/modifier/<?= $eventId ?>">Modifier l'événement</a>
-      <a href="<?= $absoluteUrl ?>evenements/supprimer/<?= $eventId ?>">Supprimer l'événement</a>
 
     <?php endforeach; ?>
 
